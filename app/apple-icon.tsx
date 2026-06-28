@@ -15,8 +15,8 @@ export default function AppleIcon() {
         justifyContent: "center",
         background: "#000000",
         backgroundImage:
-          "radial-gradient(80% 80% at 50% 0%, rgba(254,127,45,0.5), transparent 70%)",
-        color: "#FF9A57",
+          "radial-gradient(80% 80% at 50% 0%, rgba(139,92,246,0.5), transparent 70%)",
+        color: "#a78bfa",
         fontSize: 96,
         fontWeight: 700,
         letterSpacing: -4,

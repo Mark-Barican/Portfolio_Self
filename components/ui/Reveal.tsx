@@ -1,8 +1,12 @@
 "use client";
 
-import { type ReactNode, useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 type Direction = "up" | "down" | "left" | "right" | "none";
 
@@ -24,21 +28,29 @@ interface RevealProps {
 const offset = (direction: Direction, distance: number) => {
   switch (direction) {
     case "up":
-      return { x: 0, y: distance };
+      return `translate3d(0, ${distance}px, 0)`;
     case "down":
-      return { x: 0, y: -distance };
+      return `translate3d(0, -${distance}px, 0)`;
     case "left":
-      return { x: distance, y: 0 };
+      return `translate3d(${distance}px, 0, 0)`;
     case "right":
-      return { x: -distance, y: 0 };
+      return `translate3d(-${distance}px, 0, 0)`;
     default:
-      return { x: 0, y: 0 };
+      return "translate3d(0, 0, 0)";
   }
 };
 
+const EASE = "cubic-bezier(0.21, 0.47, 0.32, 0.98)";
+
 /**
- * Scroll-reveal wrapper: fades, slides and optionally blurs its children into
- * view. Honours reduced-motion by rendering children statically.
+ * Scroll-reveal wrapper: slides and (optionally) un-blurs its children into
+ * view as they enter the viewport, driven by IntersectionObserver + CSS.
+ *
+ * Deliberately does NOT use a JS animation runtime: opacity is applied
+ * *instantly* (never transitioned), so content can never be trapped invisible
+ * by a stalled animation — only the slide/blur transition. A fail-safe timeout
+ * reveals the content even if the observer never fires, and reduced-motion
+ * renders everything statically.
  */
 export function Reveal({
   children,
@@ -50,33 +62,64 @@ export function Reveal({
   once = true,
   as = "div",
 }: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once, margin: "-12% 0px -12% 0px" });
-  const reduced = usePrefersReducedMotion();
-  // The runtime element follows `as`; we coerce the type to one concrete motion
-  // component so the shared props/ref stay simply typed.
-  const MotionTag = motion[as] as typeof motion.div;
+  const ref = useRef<HTMLElement>(null);
+  const [shown, setShown] = useState(false);
+  const [reduced, setReduced] = useState(false);
+  const Tag = as as "div";
 
-  if (reduced) {
-    const Tag = as;
-    return <Tag className={className}>{children}</Tag>;
-  }
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
 
-  const { x, y } = offset(direction, distance);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setReduced(true);
+      setShown(true);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setShown(true);
+            if (once) io.disconnect();
+          } else if (!once) {
+            setShown(false);
+          }
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.01 },
+    );
+    io.observe(el);
+
+    // Fail-safe: if the observer never reports (odd layouts, zero-height
+    // ancestors, etc.), reveal anyway so content is never stuck hidden.
+    const failSafe = window.setTimeout(() => setShown(true), 1400);
+
+    return () => {
+      io.disconnect();
+      window.clearTimeout(failSafe);
+    };
+  }, [once]);
+
+  const style: CSSProperties = {
+    opacity: shown ? 1 : 0,
+    transform: shown ? "translate3d(0, 0, 0)" : offset(direction, distance),
+    filter: shown || !blur ? "blur(0px)" : "blur(8px)",
+    // Note: opacity is intentionally absent from the transition list.
+    transition: reduced
+      ? "none"
+      : `transform 0.7s ${EASE} ${delay}s, filter 0.7s ${EASE} ${delay}s`,
+    willChange: "transform, filter",
+  };
 
   return (
-    <MotionTag
-      ref={ref}
+    <Tag
+      ref={ref as React.RefObject<HTMLDivElement>}
       className={className}
-      initial={{ opacity: 0, x, y, filter: blur ? "blur(10px)" : "blur(0px)" }}
-      animate={
-        inView
-          ? { opacity: 1, x: 0, y: 0, filter: "blur(0px)" }
-          : { opacity: 0, x, y, filter: blur ? "blur(10px)" : "blur(0px)" }
-      }
-      transition={{ duration: 0.7, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+      style={style}
     >
       {children}
-    </MotionTag>
+    </Tag>
   );
 }

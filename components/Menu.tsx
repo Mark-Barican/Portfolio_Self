@@ -34,8 +34,8 @@ export function Menu() {
       socialItems={socialItems}
       displaySocials
       displayItemNumbering
-      colors={["#233D4D", "#FE7F2D"]}
-      accentColor="#FE7F2D"
+      colors={["#1e3a8a", "#8b5cf6"]}
+      accentColor="#8b5cf6"
       menuButtonColor="#EAECF0"
       openMenuButtonColor="#EAECF0"
       logoUrl="/logo.svg"

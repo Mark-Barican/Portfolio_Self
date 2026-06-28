@@ -6,19 +6,20 @@
 /*  (bg-background, text-muted, text-accent, border-border, …).               */
 /* -------------------------------------------------------------------------- */
 @theme {
-  /* Core palette — black canvas, deep teal surfaces, warm orange accent,
-     soft off-white text. Derived from #000000 / #233D4D / #FE7F2D / #EAECF0. */
+  /* Core palette — black canvas, deep blue surfaces, purple accent,
+     soft off-white text. Blue is the lead brand colour, purple the accent. */
   --color-background: #000000;
-  --color-surface: #07100f;
-  --color-card: #0d1b21;
+  --color-surface: #070b16;
+  --color-card: #0e1730;
   --color-border: rgba(234, 236, 240, 0.08);
   --color-foreground: #eaecf0;
-  --color-muted: #8d9aa3;
-  --color-accent: #fe7f2d;
-  --color-accent-hover: #ff9a57;
-  /* Secondary brand colour — used in gradients, glows and glass tints. */
-  --color-teal: #233d4d;
-  --color-teal-light: #355163;
+  --color-muted: #93a0bd;
+  --color-accent: #8b5cf6;
+  --color-accent-hover: #a78bfa;
+  /* Lead brand colour (blue). Token keeps the `teal` name for compatibility
+     with existing `bg-teal` / `text-teal-light` utilities across the app. */
+  --color-teal: #2563eb;
+  --color-teal-light: #3b82f6;
 
   --font-sans:
     var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
@@ -26,13 +27,17 @@
   --font-mono:
     var(--font-geist-mono), ui-monospace, "SF Mono", "Fira Code", monospace;
 
-  --shadow-glow: 0 0 40px -10px rgba(254, 127, 45, 0.45);
+  --shadow-glow: 0 0 40px -10px rgba(139, 92, 246, 0.45);
   --shadow-elevated: 0 24px 60px -24px rgba(0, 0, 0, 0.9);
 
   /* Custom keyframes registered for Tailwind's animate-* utilities. */
   --animate-grid: grid-pan 28s linear infinite;
   --animate-float: float 9s ease-in-out infinite;
   --animate-float-slow: float 16s ease-in-out infinite;
+  /* Slow, calm pulsing lights for the ambient background. */
+  --animate-pulse-glow: pulse-glow 12s ease-in-out infinite;
+  --animate-pulse-glow-slow: pulse-glow 18s ease-in-out infinite;
+  --animate-pulse-glow-slower: pulse-glow 24s ease-in-out infinite;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -64,7 +69,7 @@
   }
 
   ::selection {
-    background-color: rgba(254, 127, 45, 0.28);
+    background-color: rgba(139, 92, 246, 0.32);
     color: #fff;
   }
 
@@ -73,6 +78,12 @@
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
     border-radius: 4px;
+  }
+
+  /* Hide the native cursor while the custom ring cursor is active (desktop). */
+  .cursor-none,
+  .cursor-none * {
+    cursor: none !important;
   }
 
   /* Tasteful, theme-matched scrollbar. */
@@ -89,7 +100,7 @@
     border: 2px solid var(--color-background);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(254, 127, 45, 0.55);
+    background: rgba(139, 92, 246, 0.55);
   }
 }
 
@@ -99,7 +110,7 @@
 @layer components {
   /* Frosted glass surface used by the navbar, cards, and modal. */
   .glass {
-    background-color: rgba(13, 27, 33, 0.55);
+    background-color: rgba(14, 23, 48, 0.55);
     backdrop-filter: blur(16px) saturate(150%);
     -webkit-backdrop-filter: blur(16px) saturate(150%);
     border: 1px solid var(--color-border);
@@ -110,7 +121,7 @@
     background-image: linear-gradient(
       120deg,
       #eaecf0 0%,
-      #eaecf0 38%,
+      #93c5fd 46%,
       var(--color-accent) 100%
     );
     -webkit-background-clip: text;
@@ -151,6 +162,44 @@
   }
   50% {
     transform: translate3d(0, -22px, 0);
+  }
+}
+
+/* Gentle breathing glow — opacity + scale only, so it stays compositor-cheap. */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.18);
+  }
+}
+
+/* Looping paper-plane "launch" used by the contact send button while sending. */
+@keyframes plane-launch {
+  0% {
+    transform: translate(-5px, 5px) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(16px, -16px) rotate(12deg);
+    opacity: 0;
+  }
+}
+
+/* Toast progress bar — depletes left→right over the toast's lifetime. */
+@keyframes toast-bar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
   }
 }
 

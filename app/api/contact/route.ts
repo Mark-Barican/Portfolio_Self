@@ -6,6 +6,43 @@ export const runtime = "nodejs";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
+/* -------------------------------------------------------------------------- */
+/*  Best-effort in-memory rate limiter (per server instance).                 */
+/*  Keeps the inbox from being flooded by the same client.                    */
+/* -------------------------------------------------------------------------- */
+const RATE_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const RATE_MAX = 3; // messages per window per IP
+const rateHits = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (rateHits.get(ip) ?? []).filter(
+    (t) => now - t < RATE_WINDOW_MS,
+  );
+  if (recent.length >= RATE_MAX) {
+    rateHits.set(ip, recent);
+    return true;
+  }
+  recent.push(now);
+  rateHits.set(ip, recent);
+  // Opportunistically prune the map so it can't grow unbounded.
+  if (rateHits.size > 5000) {
+    for (const [key, times] of rateHits) {
+      if (times.every((t) => now - t >= RATE_WINDOW_MS)) rateHits.delete(key);
+    }
+  }
+  return false;
+}
+
+function clientIp(request: Request): string {
+  const fwd = request.headers.get("x-forwarded-for");
+  return (
+    fwd?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown"
+  );
+}
+
 interface ContactPayload {
   name?: string;
   email?: string;
@@ -55,6 +92,16 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "That message is a little too long." },
       { status: 400 },
+    );
+  }
+
+  if (isRateLimited(clientIp(request))) {
+    return NextResponse.json(
+      {
+        error:
+          "You've sent a few messages already — please give it a little while before sending another.",
+      },
+      { status: 429 },
     );
   }
 

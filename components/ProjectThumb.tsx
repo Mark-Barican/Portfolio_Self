@@ -1,19 +1,21 @@
+import Image from "next/image";
 import type { Project } from "@/types";
 import { cn } from "@/lib/utils";
 
 interface ProjectThumbProps {
-  project: Pick<Project, "title" | "category" | "accent" | "tagline" | "icon">;
+  project: Pick<
+    Project,
+    "title" | "category" | "accent" | "tagline" | "icon" | "cover"
+  >;
   className?: string;
   /** Larger treatment for hero cards and the modal header. */
   size?: "sm" | "lg";
 }
 
 /**
- * Elegant generated placeholder standing in for a real project screenshot:
- * a themed gradient, a large watermark icon, and a glass icon badge + title.
- *
- * TODO: Replace with an actual screenshot via next/image once captures exist —
- *   e.g. drop `public/projects/<id>.png` and render <Image fill ... />.
+ * Project thumbnail. Renders the real cover screenshot when one exists,
+ * otherwise falls back to an elegant generated placeholder (themed gradient +
+ * watermark icon + title).
  */
 export function ProjectThumb({
   project,
@@ -22,6 +24,28 @@ export function ProjectThumb({
 }: ProjectThumbProps) {
   const [from, to] = project.accent;
   const Icon = project.icon;
+
+  if (project.cover) {
+    return (
+      <div
+        className={cn("relative h-full w-full overflow-hidden", className)}
+        style={{ backgroundColor: "#070b16" }}
+      >
+        <Image
+          src={project.cover}
+          alt={`${project.title} — ${project.tagline}`}
+          fill
+          sizes={size === "lg" ? "(max-width: 768px) 100vw, 768px" : "(max-width: 1024px) 100vw, 50vw"}
+          className="object-cover object-top"
+        />
+        {/* Legibility wash + category badge */}
+        <div className="absolute inset-0 bg-gradient-to-t from-card/70 via-transparent to-transparent" />
+        <span className="absolute top-4 left-4 rounded-full border border-white/15 bg-black/40 px-2.5 py-1 text-[0.7rem] font-medium tracking-wide text-white/85 backdrop-blur">
+          {project.category}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div

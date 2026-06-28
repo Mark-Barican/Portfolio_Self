@@ -83,8 +83,12 @@ export interface Project {
   };
   /** Marks cards that get the large hero treatment. */
   featured: boolean;
-  /** Tailwind gradient stops used to render the elegant image placeholder. */
+  /** Gradient stops used for the compact card chip + image fallback. */
   accent: [string, string];
+  /** Primary screenshot shown on the card and as the modal hero. */
+  cover?: string;
+  /** Additional screenshots shown in the modal gallery. */
+  gallery?: string[];
 }
 
 /** A professional certification. */

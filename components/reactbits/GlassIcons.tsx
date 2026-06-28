@@ -21,13 +21,15 @@ interface GlassIconsProps {
  * Renders a grid of frosted-glass icon tiles with a 3D hover lift.
  * Gradients are themed to the site palette (warm orange + deep teal family).
  */
+// Keys are retained for compatibility with Skills' CATEGORY_COLORS, but the
+// values now span the blue → purple family (no warm tones).
 const gradientMapping: Record<string, string> = {
-  orange: "linear-gradient(hsl(25, 99%, 62%), hsl(20, 96%, 50%))",
-  amber: "linear-gradient(hsl(33, 96%, 62%), hsl(25, 95%, 52%))",
-  sand: "linear-gradient(hsl(28, 58%, 60%), hsl(22, 52%, 46%))",
-  teal: "linear-gradient(hsl(201, 38%, 33%), hsl(201, 38%, 22%))",
-  steel: "linear-gradient(hsl(201, 30%, 45%), hsl(201, 36%, 30%))",
-  deep: "linear-gradient(hsl(201, 45%, 18%), hsl(201, 52%, 10%))",
+  orange: "linear-gradient(hsl(262, 83%, 64%), hsl(262, 80%, 52%))",
+  amber: "linear-gradient(hsl(272, 76%, 62%), hsl(274, 72%, 50%))",
+  sand: "linear-gradient(hsl(243, 75%, 62%), hsl(245, 72%, 50%))",
+  teal: "linear-gradient(hsl(217, 91%, 60%), hsl(221, 83%, 50%))",
+  steel: "linear-gradient(hsl(206, 90%, 58%), hsl(212, 86%, 48%))",
+  deep: "linear-gradient(hsl(224, 64%, 30%), hsl(226, 70%, 20%))",
 };
 
 const GlassIcons = ({ items, className }: GlassIconsProps) => {

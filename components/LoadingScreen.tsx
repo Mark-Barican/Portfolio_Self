@@ -1,78 +1,88 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, animate, motion } from "framer-motion";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import CountUp from "@/components/reactbits/CountUp";
 
 const SESSION_KEY = "mb-portfolio-intro-seen";
+/** How long the count runs before the curtain lifts. */
+const COUNT_DURATION = 1.4;
+/** Curtain-up slide duration. */
+const EXIT_MS = 700;
 
 /**
- * Brief, once-per-session intro overlay: monogram + count to 100, then a clean
- * curtain-up exit. Skipped entirely on repeat visits and reduced-motion so it
- * never gets in the way of the content (or the LCP).
+ * Brief, once-per-session intro overlay: monogram + a React Bits <CountUp />
+ * sweeping 0 → 100, then a clean curtain-up exit. Skipped on repeat visits and
+ * reduced-motion so it never blocks the content (or the LCP).
+ *
+ * Both the dismissal and the unmount are driven by timers (and the curtain by a
+ * plain CSS transform transition) — never by an animation-completion callback.
+ * So the overlay is guaranteed to clear and can never trap the page, even if the
+ * animation runtime stalls.
  */
 export function LoadingScreen() {
-  const reduced = usePrefersReducedMotion();
   const [loading, setLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
+  const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
-    const seen =
-      typeof window !== "undefined" &&
-      window.sessionStorage.getItem(SESSION_KEY);
+    // Read the real values once, synchronously, on mount — avoids the
+    // first-paint flip that a reactive reduced-motion hook introduces.
+    const seen = window.sessionStorage.getItem(SESSION_KEY);
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
-    if (seen || reduced) {
+    if (seen || prefersReduced) {
       setLoading(false);
       return;
     }
 
     document.body.style.overflow = "hidden";
-    const controls = animate(0, 100, {
-      duration: 1.1,
-      ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => setProgress(Math.round(v)),
-      onComplete: () => {
+
+    const startExit = window.setTimeout(
+      () => {
         window.sessionStorage.setItem(SESSION_KEY, "1");
-        setLoading(false);
+        setExiting(true);
+        document.body.style.overflow = "";
       },
-    });
+      COUNT_DURATION * 1000 + 250,
+    );
+
+    const unmount = window.setTimeout(
+      () => setLoading(false),
+      COUNT_DURATION * 1000 + 250 + EXIT_MS,
+    );
 
     return () => {
-      controls.stop();
+      window.clearTimeout(startExit);
+      window.clearTimeout(unmount);
       document.body.style.overflow = "";
     };
-  }, [reduced]);
+  }, []);
 
-  useEffect(() => {
-    if (!loading) document.body.style.overflow = "";
-  }, [loading]);
+  if (!loading) return null;
 
   return (
-    <AnimatePresence>
-      {loading && (
-        <motion.div
-          key="loader"
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background"
-          initial={{ opacity: 1 }}
-          exit={{ y: "-100%" }}
-          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-        >
-          <div className="flex flex-col items-center gap-6">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="grid h-20 w-20 place-items-center rounded-2xl border border-border bg-card text-2xl font-semibold tracking-tight"
-            >
-              <span className="text-gradient">MB</span>
-            </motion.div>
-            <div className="font-mono text-sm text-muted">
-              {progress.toString().padStart(3, "0")}
-              <span className="text-accent">%</span>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background transition-transform ease-[cubic-bezier(0.76,0,0.24,1)]"
+      style={{
+        transitionDuration: `${EXIT_MS}ms`,
+        transform: exiting ? "translateY(-100%)" : "translateY(0)",
+      }}
+    >
+      <div className="flex flex-col items-center gap-6">
+        <div className="grid h-20 w-20 animate-float place-items-center rounded-2xl border border-border bg-card text-2xl font-semibold tracking-tight">
+          <span className="text-gradient">MB</span>
+        </div>
+        <div className="font-mono text-sm text-muted">
+          <CountUp
+            to={100}
+            from={0}
+            duration={COUNT_DURATION}
+            className="tabular-nums"
+          />
+          <span className="text-accent">%</span>
+        </div>
+      </div>
+    </div>
   );
 }

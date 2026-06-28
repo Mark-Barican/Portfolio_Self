@@ -34,7 +34,7 @@ import {
   SiApache,
   SiGit,
   SiGithub,
-  SiAnthropic,
+  SiClaude,
   SiOpenai,
   SiN8N,
   SiFigma,
@@ -57,7 +57,6 @@ import {
   LuDroplet,
   LuContainer,
   LuCloud,
-  LuImage,
   LuMail,
   LuShieldCheck,
   LuNetwork,
@@ -67,14 +66,12 @@ import {
   LuClapperboard,
   LuWrench,
   LuHeart,
-  LuBoxes,
-  LuListChecks,
-  LuArrowDownWideNarrow,
   LuCode,
   LuSparkles,
   LuFlower2,
   LuGamepad2,
 } from "react-icons/lu";
+import { DiPhotoshop } from "react-icons/di";
 import type { IconType } from "react-icons";
 import type {
   Certification,
@@ -178,13 +175,13 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     title: "Tools & AI",
     description: "Force multipliers in my daily workflow.",
     skills: [
-      { name: "Claude Code", icon: SiAnthropic },
+      { name: "Claude Code", icon: SiClaude },
       { name: "Codex", icon: SiOpenai },
       { name: "n8n", icon: SiN8N },
       { name: "Figma", icon: SiFigma },
       { name: "Unity", icon: SiUnity },
       { name: "Blender", icon: SiBlender },
-      { name: "Photoshop", icon: LuImage },
+      { name: "Photoshop", icon: DiPhotoshop },
       { name: "Pandas", icon: SiPandas },
       { name: "NumPy", icon: SiNumpy },
       { name: "TensorFlow", icon: SiTensorflow },
@@ -288,7 +285,13 @@ export const PROJECTS: Project[] = [
       live: "https://loan-link-finals.vercel.app",
     },
     featured: true,
-    accent: ["#FE7F2D", "#233D4D"],
+    accent: ["#8b5cf6", "#2563eb"],
+    cover: "/LoanLink_images/LoanLink_Hero_image.png",
+    gallery: [
+      "/LoanLink_images/admin-dashboard.png",
+      "/LoanLink_images/companies.png",
+      "/LoanLink_images/reports.png",
+    ],
   },
   {
     id: "vintage-rider-manila",
@@ -320,7 +323,13 @@ export const PROJECTS: Project[] = [
       live: "https://vrm-demo-umber.vercel.app",
     },
     featured: true,
-    accent: ["#355163", "#233D4D"],
+    accent: ["#3b82f6", "#1e3a8a"],
+    cover: "/VRM_images/VRM_hero_image.png",
+    gallery: [
+      "/VRM_images/helmet.png",
+      "/VRM_images/page.png",
+      "/VRM_images/shop.png",
+    ],
   },
   {
     id: "endfield-gacha-simulator",
@@ -352,7 +361,8 @@ export const PROJECTS: Project[] = [
       live: "https://endfield-gacha-simulator.vercel.app",
     },
     featured: true,
-    accent: ["#FE9A57", "#233D4D"],
+    accent: ["#a78bfa", "#6366f1"],
+    cover: "/Endfield_images/Endfield_hero_image.png",
   },
   {
     id: "recraft",
@@ -384,7 +394,9 @@ export const PROJECTS: Project[] = [
       live: "https://recraft-bar.vercel.app",
     },
     featured: true,
-    accent: ["#FE7F2D", "#0d1b21"],
+    accent: ["#8b5cf6", "#1e3a8a"],
+    cover: "/Recraft_images/Recraft_hero_image.png",
+    gallery: ["/Recraft_images/img1.png", "/Recraft_images/img2.png"],
   },
   {
     id: "weride",
@@ -416,7 +428,13 @@ export const PROJECTS: Project[] = [
       live: "https://weride-demo-site.vercel.app",
     },
     featured: false,
-    accent: ["#2E5468", "#233D4D"],
+    accent: ["#60a5fa", "#2563eb"],
+    cover: "/Weride_images/weride_hero_image.png",
+    gallery: [
+      "/Weride_images/about.png",
+      "/Weride_images/browse.png",
+      "/Weride_images/parts.png",
+    ],
   },
   {
     id: "valentines-2026",
@@ -447,100 +465,8 @@ export const PROJECTS: Project[] = [
       live: "https://valentines-2026-phi.vercel.app",
     },
     featured: false,
-    accent: ["#FF9A57", "#233D4D"],
-  },
-  {
-    id: "sparesync",
-    title: "SpareSync",
-    tagline: "Spare-Parts Pre-Ordering Assistant",
-    category: "Full-Stack",
-    icon: LuBoxes,
-    description:
-      "A smart spare-parts pre-ordering assistant that helps users reserve, track and manage parts ahead of time.",
-    overview:
-      "SpareSync is a smart spare-parts pre-ordering assistant. It lets users reserve parts in advance, track their orders and manage everything from one place — turning a reactive, last-minute process into a planned one.",
-    tech: ["Next.js", "TypeScript", "Full-Stack"],
-    features: [
-      "Reserve and pre-order spare parts ahead of time",
-      "Track orders end to end",
-      "Manage reservations from one dashboard",
-    ],
-    challenges: [
-      "Pre-ordering needs reliable state across reserve, track and manage flows.",
-      "The experience had to stay simple despite the moving parts.",
-    ],
-    solutions: [
-      "Modeled the reservation lifecycle explicitly with a clear, trackable status.",
-      "Centralised everything into a single management view.",
-    ],
-    links: {
-      repo: "https://github.com/Mark-Barican/SpareSync",
-      live: "https://spare-sync.vercel.app",
-    },
-    featured: false,
-    accent: ["#FE7F2D", "#1a2c36"],
-  },
-  {
-    id: "tasktrek",
-    title: "TaskTrek",
-    tagline: "Task Management App",
-    category: "Full-Stack",
-    icon: LuListChecks,
-    description:
-      "A task management app for organising work and tracking progress, deployed on Vercel.",
-    overview:
-      "TaskTrek is a task management app for organising work and keeping progress visible. Built with Next.js and TypeScript and shipped to production on Vercel.",
-    tech: ["Next.js", "TypeScript", "Vercel"],
-    features: [
-      "Create and organise tasks",
-      "Track progress at a glance",
-      "Fast, responsive UI",
-    ],
-    challenges: [
-      "Task state needed to stay snappy and consistent.",
-      "The UI had to stay clear as task counts grow.",
-    ],
-    solutions: [
-      "Built a responsive, state-driven task interface.",
-      "Kept the layout legible and quick to scan.",
-    ],
-    links: {
-      repo: "https://github.com/Mark-Barican/TaskTrek",
-      live: "https://task-trek-azure.vercel.app",
-    },
-    featured: false,
-    accent: ["#3D6076", "#233D4D"],
-  },
-  {
-    id: "sorting-visualizer",
-    title: "Sorting Visualizer",
-    tagline: "Algorithm Visualization Tool",
-    category: "Interactive",
-    icon: LuArrowDownWideNarrow,
-    description:
-      "An interactive visualizer that animates how classic sorting algorithms work, step by step.",
-    overview:
-      "Sorting Visualizer is an interactive tool that animates classic sorting algorithms step by step — a hands-on way to see how the data moves and compare approaches in real time.",
-    tech: ["JavaScript", "Algorithms", "Web"],
-    features: [
-      "Animated, step-by-step sorting",
-      "Multiple classic algorithms",
-      "Interactive, real-time visualization",
-    ],
-    challenges: [
-      "Animations had to stay smooth while reflecting each algorithm step.",
-      "The visual had to make the logic genuinely clear.",
-    ],
-    solutions: [
-      "Drove the animation directly from each algorithm's steps.",
-      "Kept the visualization focused and easy to follow.",
-    ],
-    links: {
-      repo: "https://github.com/Mark-Barican/Sorting_Visualizer",
-      live: "https://sorting-visualizer-weld-psi.vercel.app",
-    },
-    featured: false,
-    accent: ["#FE7F2D", "#355163"],
+    accent: ["#a78bfa", "#7c3aed"],
+    cover: "/Valentines_images/Valentines_hero_image.png",
   },
 ];
 

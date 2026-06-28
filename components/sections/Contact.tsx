@@ -1,19 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  LuCheck,
-  LuCopy,
-  LuDownload,
-  LuLoaderCircle,
-  LuSend,
-} from "react-icons/lu";
+import { LuCheck, LuCopy, LuDownload, LuSend } from "react-icons/lu";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { Magnetic } from "@/components/ui/Magnetic";
+import { Toast } from "@/components/ui/Toast";
 import { SOCIAL_LINKS } from "@/lib/data";
 import { LINKS, SITE } from "@/lib/constants";
+
+/** Min. gap between two sends from this browser (client-side contingency). */
+const COOLDOWN_MS = 60_000;
+const LAST_SENT_KEY = "mb-contact-last-sent";
+const TOAST_MESSAGE =
+  "Thanks for reaching out — your message just landed in my inbox. I'll get back to you within a day or two. 🚀";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -54,13 +55,45 @@ const inputClasses =
 function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
+  const [toastSeq, setToastSeq] = useState(0);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [cooldownUntil, setCooldownUntil] = useState(0);
+  const [now, setNow] = useState(0);
+
+  // Restore any persisted cooldown from a previous send in this browser.
+  useEffect(() => {
+    const last = Number(localStorage.getItem(LAST_SENT_KEY) || 0);
+    setNow(Date.now());
+    if (last) setCooldownUntil(last + COOLDOWN_MS);
+  }, []);
+
+  // Tick a 1s countdown while cooling down.
+  useEffect(() => {
+    if (cooldownUntil <= Date.now()) return;
+    const id = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, [cooldownUntil]);
+
+  const cooldownLeft = Math.max(0, Math.ceil((cooldownUntil - now) / 1000));
+  const onCooldown = now > 0 && cooldownLeft > 0;
+  const submitting = status === "submitting";
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Capture the form node now — `event.currentTarget` is nulled after the
+    // first `await`, which previously threw on `.reset()`.
+    const form = event.currentTarget;
+
+    if (onCooldown) {
+      setStatus("error");
+      setError(`Please wait ${cooldownLeft}s before sending another message.`);
+      return;
+    }
+
     setStatus("submitting");
     setError("");
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const payload = {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
@@ -80,37 +113,23 @@ function ContactForm() {
         } | null;
         throw new Error(data?.error ?? "Something went wrong.");
       }
-      setStatus("success");
-      event.currentTarget.reset();
+      form.reset();
+      const ts = Date.now();
+      localStorage.setItem(LAST_SENT_KEY, String(ts));
+      setCooldownUntil(ts + COOLDOWN_MS);
+      setNow(ts);
+      setStatus("idle");
+      setToastSeq((s) => s + 1);
+      setToastOpen(true);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Something went wrong.");
     }
   };
 
-  if (status === "success") {
-    return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 rounded-2xl border border-accent/30 bg-accent/[0.06] p-8 text-center">
-        <span className="grid h-12 w-12 place-items-center rounded-full bg-accent/15 text-accent">
-          <LuCheck size={22} />
-        </span>
-        <p className="text-lg font-medium">Message sent!</p>
-        <p className="text-sm text-muted">
-          Thanks for reaching out — I&apos;ll get back to you soon.
-        </p>
-        <button
-          type="button"
-          onClick={() => setStatus("idle")}
-          className="mt-1 text-sm text-accent-hover hover:underline"
-        >
-          Send another
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-left">
+    <>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-left">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="name" className="text-xs font-medium text-muted">
@@ -174,15 +193,20 @@ function ContactForm() {
 
       <button
         type="submit"
-        disabled={status === "submitting"}
+        disabled={submitting || onCooldown}
         data-cursor="hover"
-        className="group mt-1 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-medium text-black shadow-[0_8px_30px_-8px_rgba(254,127,45,0.65)] transition-all duration-300 hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-70"
+        className="group mt-1 inline-flex h-12 items-center justify-center gap-2 overflow-hidden rounded-full bg-accent px-6 text-sm font-medium text-black shadow-[0_8px_30px_-8px_rgba(139,92,246,0.65)] transition-[transform,background-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:bg-accent-hover active:scale-[0.96] active:duration-75 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
       >
-        {status === "submitting" ? (
+        {submitting ? (
           <>
-            <LuLoaderCircle size={17} className="animate-spin" />
+            <LuSend
+              size={16}
+              className="animate-[plane-launch_0.7s_ease-in-out_infinite]"
+            />
             Sending…
           </>
+        ) : onCooldown ? (
+          <>Please wait {cooldownLeft}s</>
         ) : (
           <>
             Send message
@@ -193,7 +217,17 @@ function ContactForm() {
           </>
         )}
       </button>
-    </form>
+      </form>
+
+      {toastOpen && (
+        <Toast
+          key={toastSeq}
+          title="Thank you for your email!"
+          message={TOAST_MESSAGE}
+          onClose={() => setToastOpen(false)}
+        />
+      )}
+    </>
   );
 }
 
@@ -209,7 +243,7 @@ export function Contact() {
               className="absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(60% 60% at 50% 0%, rgba(254,127,45,0.18), transparent 70%)",
+                  "radial-gradient(60% 60% at 50% 0%, rgba(139,92,246,0.18), transparent 70%)",
               }}
             />
 
@@ -235,8 +269,9 @@ export function Contact() {
                 <CopyEmailButton />
 
                 <div className="mt-2 flex flex-wrap items-center gap-3">
-                  {SOCIAL_LINKS.map((link) => {
-                    const Icon = link.icon;
+                  {SOCIAL_LINKS.filter((link) => link.label !== "Email").map(
+                    (link) => {
+                      const Icon = link.icon;
                     return (
                       <motion.a
                         key={link.label}

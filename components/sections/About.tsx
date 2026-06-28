@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { LuGraduationCap, LuMapPin, LuQuote } from "react-icons/lu";
 import { Container } from "@/components/ui/Container";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -18,34 +19,24 @@ export function About() {
         />
 
         <div className="mt-14 grid gap-10 lg:grid-cols-12 lg:gap-12">
-          {/* Profile placeholder */}
+          {/* Portrait */}
           <Reveal className="lg:col-span-5" direction="right">
-            {/* TODO: Replace this placeholder with a real portrait —
-                drop the image in /public and swap in next/image. */}
             <div className="group relative aspect-[4/5] overflow-hidden rounded-3xl border border-border bg-card">
-              <div
-                className="absolute inset-0 opacity-90"
-                style={{
-                  background:
-                    "radial-gradient(120% 90% at 20% 10%, rgba(254,127,45,0.30), transparent 55%), radial-gradient(120% 90% at 90% 100%, rgba(53,81,99,0.45), transparent 55%)",
-                }}
+              <Image
+                src="/About-Photo.jpg"
+                alt="Mark Barican"
+                fill
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover object-center [filter:saturate(0.92)_contrast(1.02)]"
               />
-              <div className="grid-pattern absolute inset-0 opacity-40" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                <span className="text-gradient text-7xl font-semibold tracking-tight">
-                  MB
-                </span>
-                <span className="font-mono text-xs tracking-[0.25em] text-muted uppercase">
-                  Mark Barican
-                </span>
-              </div>
-              <div className="absolute right-4 bottom-4 left-4 flex items-center justify-between rounded-xl border border-border bg-background/60 px-4 py-3 backdrop-blur">
+              {/* Theme overlays to ground the photo into the palette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background/75 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-teal/10 mix-blend-color" />
+              <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-white/10 ring-inset" />
+              <div className="absolute right-4 bottom-4 left-4 flex items-center rounded-xl border border-border bg-background/55 px-4 py-3 backdrop-blur">
                 <span className="flex items-center gap-2 text-sm text-muted">
                   <LuMapPin size={15} className="text-accent" />
                   {SITE.location}
-                </span>
-                <span className="text-xs font-medium text-accent-hover">
-                  CS @ CIIT
                 </span>
               </div>
             </div>
@@ -66,11 +57,11 @@ export function About() {
             </Reveal>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
               {STATS.map((stat, i) => (
                 <Reveal key={stat.label} delay={i * 0.08}>
                   <div className="h-full rounded-2xl border border-border bg-card/40 p-5 transition-colors hover:border-accent/30">
-                    <div className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                    <div className="text-3xl font-semibold tracking-tight whitespace-nowrap text-foreground tabular-nums">
                       <AnimatedCounter
                         value={stat.value}
                         suffix={stat.suffix}

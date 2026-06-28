@@ -26,6 +26,9 @@ export function Cursor() {
   useEffect(() => {
     if (!enabled) return;
 
+    // Hide the native (white) cursor while the custom ring is active.
+    document.documentElement.classList.add("cursor-none");
+
     const move = (event: PointerEvent) => {
       x.set(event.clientX);
       y.set(event.clientY);
@@ -42,6 +45,7 @@ export function Cursor() {
     return () => {
       window.removeEventListener("pointermove", move);
       document.removeEventListener("pointerleave", leave);
+      document.documentElement.classList.remove("cursor-none");
     };
   }, [enabled, x, y]);
 
@@ -54,12 +58,12 @@ export function Cursor() {
       style={{ opacity: visible ? 1 : 0 }}
     >
       <motion.div
-        className="absolute rounded-full border border-accent/70 mix-blend-difference"
+        className="absolute rounded-full border-2 border-accent"
         style={{ left: ringX, top: ringY, x: "-50%", y: "-50%" }}
         animate={{
           width: hovering ? 56 : 32,
           height: hovering ? 56 : 32,
-          opacity: hovering ? 0.9 : 0.6,
+          opacity: hovering ? 1 : 0.85,
         }}
         transition={{ type: "spring", stiffness: 250, damping: 20 }}
       />

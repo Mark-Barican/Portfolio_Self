@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   LuX,
@@ -12,6 +13,7 @@ import {
 } from "react-icons/lu";
 import { ProjectThumb } from "@/components/ProjectThumb";
 import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 import type { Project } from "@/types";
 
 interface ProjectModalProps {
@@ -133,21 +135,32 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   {project.overview}
                 </p>
 
-                {/* Gallery placeholders */}
-                {/* TODO: Swap these tiles for real screenshots in /public/projects. */}
-                <div className="grid grid-cols-3 gap-3">
-                  {[0, 1, 2].map((n) => (
-                    <div
-                      key={n}
-                      className="relative aspect-video overflow-hidden rounded-xl border border-border"
-                      style={{
-                        backgroundImage: `linear-gradient(135deg, ${project.accent[0]}22, ${project.accent[1]}44)`,
-                      }}
-                    >
-                      <div className="grid-pattern absolute inset-0 opacity-30" />
-                    </div>
-                  ))}
-                </div>
+                {/* Gallery — real screenshots (omitted for single-image projects) */}
+                {project.gallery && project.gallery.length > 0 && (
+                  <div
+                    className={cn(
+                      "grid gap-3",
+                      project.gallery.length >= 3
+                        ? "sm:grid-cols-3"
+                        : "sm:grid-cols-2",
+                    )}
+                  >
+                    {project.gallery.map((src, i) => (
+                      <div
+                        key={src}
+                        className="relative aspect-video overflow-hidden rounded-xl border border-border bg-surface"
+                      >
+                        <Image
+                          src={src}
+                          alt={`${project.title} screenshot ${i + 1}`}
+                          fill
+                          sizes="(max-width: 640px) 100vw, 240px"
+                          className="object-cover object-top"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 {/* Features */}
                 <div>

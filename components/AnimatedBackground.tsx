@@ -41,14 +41,14 @@ export function AnimatedBackground() {
       {/* Base wash */}
       <div className="absolute inset-0 bg-background" />
 
-      {/* Soft radial gradients — warm accent up top, cool teal in the corner */}
-      <div className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_-10%,rgba(254,127,45,0.14),transparent_70%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(45%_45%_at_100%_100%,rgba(35,61,77,0.35),transparent_65%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(40%_40%_at_0%_60%,rgba(35,61,77,0.22),transparent_60%)]" />
+      {/* Soft radial gradients — purple accent up top, blue in the corners */}
+      <div className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_-10%,rgba(139,92,246,0.16),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(45%_45%_at_100%_100%,rgba(37,99,235,0.30),transparent_65%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(40%_40%_at_0%_60%,rgba(37,99,235,0.20),transparent_60%)]" />
 
-      {/* Masked animated grid */}
+      {/* Masked grid (static) */}
       <div
-        className={`grid-pattern absolute inset-0 ${reduced ? "" : "animate-grid"}`}
+        className="grid-pattern absolute inset-0"
         style={{
           maskImage:
             "radial-gradient(ellipse 80% 60% at 50% 30%, black 35%, transparent 80%)",
@@ -57,22 +57,27 @@ export function AnimatedBackground() {
         }}
       />
 
-      {/* Floating glow orbs */}
+      {/* Slow pulsing ambient lights (purple + blue) */}
       <div
-        className={`absolute top-1/4 -left-20 h-72 w-72 rounded-full bg-accent/15 blur-[120px] ${
-          reduced ? "" : "animate-float"
+        className={`absolute top-1/4 -left-20 h-72 w-72 rounded-full bg-accent/25 blur-[120px] ${
+          reduced ? "opacity-40" : "animate-pulse-glow"
         }`}
       />
       <div
-        className={`absolute top-1/2 right-0 h-80 w-80 rounded-full bg-teal/25 blur-[140px] ${
-          reduced ? "" : "animate-float-slow"
+        className={`absolute top-1/2 right-0 h-80 w-80 rounded-full bg-teal/35 blur-[140px] ${
+          reduced ? "opacity-40" : "animate-pulse-glow-slow"
+        }`}
+      />
+      <div
+        className={`absolute bottom-8 left-1/3 h-64 w-64 rounded-full bg-accent/20 blur-[130px] ${
+          reduced ? "opacity-30" : "animate-pulse-glow-slower"
         }`}
       />
 
       {/* Cursor-reactive glow */}
       {interactive && (
         <motion.div
-          className="absolute h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(254,127,45,0.12),transparent_60%)] blur-2xl"
+          className="absolute h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.14),transparent_60%)] blur-2xl"
           style={{ left, top }}
         />
       )}

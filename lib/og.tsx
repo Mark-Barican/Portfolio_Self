@@ -20,7 +20,7 @@ export function createOgImage() {
         padding: 80,
         background: "#000000",
         backgroundImage:
-          "radial-gradient(60% 60% at 50% 0%, rgba(254,127,45,0.28), transparent 70%), radial-gradient(50% 50% at 100% 100%, rgba(35,61,77,0.5), transparent 70%)",
+          "radial-gradient(60% 60% at 50% 0%, rgba(139,92,246,0.30), transparent 70%), radial-gradient(50% 50% at 100% 100%, rgba(37,99,235,0.45), transparent 70%)",
         color: "#eaecf0",
         fontFamily: "sans-serif",
       }}
@@ -43,7 +43,7 @@ export function createOgImage() {
             border: "1px solid rgba(255,255,255,0.12)",
             alignItems: "center",
             justifyContent: "center",
-            color: "#FF9A57",
+            color: "#a78bfa",
             fontWeight: 700,
             fontSize: 30,
           }}
@@ -65,7 +65,7 @@ export function createOgImage() {
         >
           Mark Barican
         </div>
-        <div style={{ display: "flex", fontSize: 44, color: "#FF9A57" }}>
+        <div style={{ display: "flex", fontSize: 44, color: "#a78bfa" }}>
           {SITE.role}
         </div>
         <div
