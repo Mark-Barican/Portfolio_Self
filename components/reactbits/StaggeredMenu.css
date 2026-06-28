@@ -16,24 +16,46 @@
   overflow: hidden;
 }
 
+/* Floating glass nav bar — offset from the top/side edges and pinned to the
+   viewport. It is `position: fixed` (not absolute-in-wrapper) so no ancestor's
+   overflow/transform can drag it along while scrolling — the bar truly sticks
+   on every device. pointer-events stay off the bar itself so it never blocks
+   content; the logo + toggle re-enable them. */
 .staggered-menu-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  position: fixed;
+  top: 0.6rem;
+  left: 0.6rem;
+  right: 0.6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25em 1.25em;
-  background: transparent;
+  padding: 0.55rem 0.75rem 0.55rem 0.9rem;
+  border-radius: 9999px;
+  background: rgba(14, 23, 48, 0.55);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid rgba(234, 236, 240, 0.1);
+  box-shadow: 0 14px 34px -22px rgba(0, 0, 0, 0.85);
   pointer-events: none;
   z-index: 20;
 }
 
 @media (min-width: 640px) {
   .staggered-menu-header {
-    padding: 1.5em 2em;
+    top: 0.9rem;
+    left: 1rem;
+    right: 1rem;
+    padding: 0.6rem 0.9rem 0.6rem 1.15rem;
   }
+}
+
+/* While the panel is open, drop the glass so the bar doesn't sit over the menu. */
+.staggered-menu-wrapper[data-open] .staggered-menu-header {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .staggered-menu-header > * {

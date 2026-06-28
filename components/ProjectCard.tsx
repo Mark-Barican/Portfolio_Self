@@ -64,10 +64,9 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
         style={{
-          transform:
-            "rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(0)",
+          transform: "rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))",
         }}
-        className="relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card/40 transition-[transform,border-color,box-shadow] duration-200 ease-out [transform-style:preserve-3d] will-change-transform group-hover:border-accent/30 group-hover:shadow-[0_30px_90px_-45px_rgba(139,92,246,0.55)]"
+        className="relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card/40 transition-[transform,border-color,box-shadow] duration-200 ease-out will-change-transform group-hover:border-accent/30 group-hover:shadow-[0_30px_90px_-45px_rgba(139,92,246,0.55)]"
       >
         {/* Cursor spotlight */}
         <div
@@ -88,8 +87,9 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
           data-cursor="hover"
         />
 
-        {/* Image with overlaid title */}
-        <div className="relative aspect-[16/11] overflow-hidden">
+        {/* Image with overlaid title (visual only — clicks fall through to the
+            full-card button below) */}
+        <div className="pointer-events-none relative aspect-[16/11] overflow-hidden">
           <div className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.06]">
             <ProjectThumb project={project} />
           </div>
