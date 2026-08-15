@@ -56,6 +56,19 @@ const PEAK_ALPHA = 0.5;
 /** Opacity of the expanding ring on nodes nearest the pointer. Was 0.32. */
 const RING_ALPHA = 0.16;
 
+/**
+ * Which pointer types may push the mesh around.
+ *
+ * A mouse is tracked on movement alone, because hovering is something it can
+ * do. Everything else is tracked only while it is pressed — see `onMove`.
+ *
+ * To restrict this to a stylus and leave finger input alone, drop `"touch"`
+ * from this set. That is the whole change: the gesture handling below already
+ * treats pen and touch identically, and `touch-action` stays correct either
+ * way because a pen scrolls a page the same way a finger does.
+ */
+const DRAG_POINTERS = new Set(["touch", "pen"]);
+
 interface ConstellationGridProps {
   className?: string;
 }
@@ -120,7 +133,20 @@ export function ConstellationGrid({ className }: ConstellationGridProps) {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)")
       .matches;
 
-    const interactive = window.matchMedia("(pointer: fine)").matches && !reduced;
+    /* Every input drives the mesh, not just a mouse.
+     *
+     * The gate used to be `(pointer: fine)`, which meant a tablet or phone got
+     * the animated grid but could never push it — the inputs those devices
+     * actually have were the ones excluded. What differs now is *when* a
+     * pointer counts, not whether it does: a mouse is tracked whenever it
+     * moves, while pen and touch are tracked only between `pointerdown` and
+     * `pointerup`. Without that distinction a single tap would leave the field
+     * parked wherever the finger last was, a permanent bright patch on the
+     * grid with nothing left to move it.
+     *
+     * Reduced motion remains the one case with no interaction at all, because
+     * there is no frame loop running to show a response. */
+    const interactive = !reduced;
 
     let width = 0;
     let height = 0;
@@ -323,19 +349,47 @@ export function ConstellationGrid({ className }: ConstellationGridProps) {
 
     /* -- Wiring ---------------------------------------------------------- */
 
-    const onMove = (event: PointerEvent) => {
+    /** True while a pen or finger is pressed. Irrelevant to a mouse. */
+    let dragging = false;
+
+    const track = (event: PointerEvent) => {
       // Client coordinates are viewport-relative; the canvas is not. Offsetting
-      // by the host's own rect is what keeps the repulsion under the cursor
+      // by the host's own rect is what keeps the repulsion under the pointer
       // once the hero has been scrolled or parallaxed.
       const rect = host.getBoundingClientRect();
       mouse.x = event.clientX - rect.left;
       mouse.y = event.clientY - rect.top;
     };
 
-    const onLeave = () => {
+    const release = () => {
+      dragging = false;
+      // Moved far off-canvas rather than frozen in place: every node is then
+      // outside the radius and the springs carry them home on their own, which
+      // is the same settle a mouse gets when it leaves the window.
       mouse.x = -9999;
       mouse.y = -9999;
     };
+
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse" && !dragging) return;
+      track(event);
+    };
+
+    const onDown = (event: PointerEvent) => {
+      if (!DRAG_POINTERS.has(event.pointerType)) return;
+      dragging = true;
+      track(event);
+    };
+
+    // `pointercancel` matters as much as `pointerup`: it is what the browser
+    // sends when it claims a gesture for scrolling, and without it a finger
+    // that turns into a page scroll would leave `dragging` true indefinitely.
+    const onUp = (event: PointerEvent) => {
+      if (!DRAG_POINTERS.has(event.pointerType)) return;
+      release();
+    };
+
+    const onLeave = () => release();
 
     layout();
     draw();
@@ -354,7 +408,17 @@ export function ConstellationGrid({ className }: ConstellationGridProps) {
     visibility.observe(host);
 
     if (interactive) {
+      // `pointerdown` on the canvas host, so only a gesture that *starts* on
+      // the hero drives the mesh. Move and release on the window, so a drag
+      // that wanders off the hero still tracks and still ends.
+      //
+      // All passive, and nothing here calls `preventDefault` — the page has to
+      // stay scrollable from anywhere in the hero, which on a phone is most of
+      // the first screen.
+      host.addEventListener("pointerdown", onDown, { passive: true });
       window.addEventListener("pointermove", onMove, { passive: true });
+      window.addEventListener("pointerup", onUp, { passive: true });
+      window.addEventListener("pointercancel", onUp, { passive: true });
       document.addEventListener("pointerleave", onLeave);
     }
 
@@ -363,14 +427,31 @@ export function ConstellationGrid({ className }: ConstellationGridProps) {
       resize.disconnect();
       visibility.disconnect();
       if (interactive) {
+        host.removeEventListener("pointerdown", onDown);
         window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
         document.removeEventListener("pointerleave", onLeave);
       }
     };
   }, []);
 
   return (
-    <div ref={hostRef} className={className} aria-hidden>
+    /* `touch-pan-y` is what makes a pen or finger work here at all.
+     *
+     * At the default `touch-action` the browser treats any movement as a
+     * possible scroll: it fires `pointercancel` the instant it commits to one
+     * and sends no further `pointermove`, so the mesh would twitch briefly and
+     * go dead. `pan-y` splits the gesture space explicitly — vertical drags
+     * stay the browser's, so the page scrolls exactly as before, while
+     * horizontal and diagonal movement is never claimed and keeps delivering
+     * events to the canvas.
+     *
+     * So on a tablet: drag up and down to read, move across to push the grid.
+     * Neither gesture needs discovering and neither blocks the other. Nothing
+     * calls `preventDefault`, so scrolling cannot be broken by this even where
+     * a browser reads the hint differently. */
+    <div ref={hostRef} className={`touch-pan-y ${className ?? ""}`} aria-hidden>
       <canvas ref={canvasRef} className="block h-full w-full" />
     </div>
   );
