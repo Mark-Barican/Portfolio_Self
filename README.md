@@ -1,30 +1,31 @@
 # Mark Barican — Portfolio
 
-A premium, dark, cinematic personal portfolio for **Mark Luis F. Barican**, Full-Stack Developer. Built to feel expensive: glassmorphism where it earns its place, subtle borders, tasteful motion, and a strict, single-palette design system.
+An editorial, poster-style personal portfolio for **Mark Luis F. Barican**, Full-Stack Developer. Warm bone canvas, black ink, electric-yellow accent, oversized expanded-caps typography, marquee strips, a draggable story timeline, and a numbered work index — all on a strict, single-palette design system.
 
 ## Palette
 
-Black canvas, deep-teal surfaces, warm-orange accent, soft off-white text — all
-defined once as CSS tokens in `app/globals.css` (`@theme`).
+Bone canvas, black ink, electric-yellow accent — all defined once as CSS tokens
+in `app/globals.css` (`@theme`).
 
 | Token      | Value     |
 | ---------- | --------- |
-| Background | `#000000` |
-| Teal (2nd) | `#233D4D` |
-| Accent     | `#FE7F2D` |
-| Text       | `#EAECF0` |
+| Background | `#d5cfbe` |
+| Card       | `#ebeada` |
+| Ink (text) | `#0a0a0a` |
+| Accent     | `#ffff23` |
+| Green      | `#60d574` |
 
 ## Tech Stack
 
 - **Next.js 15** (App Router) + **React 19**
 - **TypeScript** (strict, `noUncheckedIndexedAccess`)
 - **Tailwind CSS v4** (CSS-first `@theme` tokens)
-- **Framer Motion** + **GSAP** (GSAP drives the StaggeredMenu)
-- **React Bits** components — `GlassIcons` (skills) and `StaggeredMenu` (nav),
-  ported to TypeScript and re-themed in `components/reactbits/`
+- **Framer Motion** (draggable timeline, cursor, marquee reveals, modal)
 - **React Icons** (Simple Icons / Lucide / Font Awesome)
 - **Resend** for the contact form (`app/api/contact`)
-- **Geist** font (sans + mono)
+- **Archivo** variable font, the only family on the page: the width axis drives
+  the expanded display headlines, regular widths carry body copy and the
+  spaced-caps `.eyebrow` labels
 - **ESLint** + **Prettier** (with Tailwind class sorting)
 - Vercel-ready (zero config)
 
@@ -60,13 +61,11 @@ app/
   opengraph-image.tsx # generated OG share image
   twitter-image.tsx   # generated Twitter share image
 components/
-  ui/                 # primitives: Button, Badge, Container, SectionTitle,
-                      #   Reveal, Magnetic, AnimatedCounter
-  sections/           # Hero, Projects, Experience, Skills, About,
-                      #   Certifications, Contact
-  reactbits/          # GlassIcons + StaggeredMenu (React Bits, TS + themed CSS)
-  Menu, Footer, ScrollProgress, Cursor, Noise, AnimatedBackground,
-  LoadingScreen, ProjectCard, ProjectCardCompact, ProjectModal, ProjectThumb
+  ui/                 # primitives: Button, Container, SectionHeading, Marquee,
+                      #   Reveal, Magnetic, AnimatedCounter, Toast
+  sections/           # Hero, Journey, Projects, WhatYouGet, About, Contact
+  Header, Footer, ScrollProgress, Cursor, Noise, LoadingScreen,
+  ProjectModal, ProjectThumb
 hooks/                # useActiveSection, useMediaQuery, usePrefersReducedMotion
 lib/                  # data.ts (resume content), constants.ts, utils.ts, og.tsx
 types/                # shared TypeScript interfaces
@@ -76,14 +75,13 @@ public/               # logo.svg, resume PDF (+ your images go here)
 All resume content lives in **`lib/data.ts`** — it is the single source of truth.
 Site-level config (URL, email, links, nav) lives in **`lib/constants.ts`**.
 
-## Replacing Placeholders
+## Content
 
-Search for `TODO` comments. The main items:
-
-- **Project screenshots** — `components/ProjectThumb.tsx` and the gallery tiles in
-  `components/ProjectModal.tsx` render elegant generated placeholders. Drop real
-  images in `public/projects/<id>.png` and swap in `next/image`.
-- **Portrait** — `components/sections/About.tsx` has a monogram placeholder.
+- **Resume content** — `lib/data.ts` (projects, journey chapters, capabilities,
+  experience, certifications, stats).
+- **Portraits** — `public/Hero-Portrait.png` (the hero cutout; must keep its
+  transparent background, since the headline passes behind the silhouette) and
+  `public/About-Photo.jpg` (about polaroid).
 - **Resume** — `public/Mark_Barican_Resume.pdf` is wired to the download button.
 - **Production URL** — set `NEXT_PUBLIC_SITE_URL` on Vercel (used by metadata,
   canonical URL, sitemap, robots, and structured data).
@@ -112,6 +110,18 @@ recipient, verify a domain in Resend and update the `from` in the route.
 3. Add environment variables (Project → Settings → Environment Variables):
    `NEXT_PUBLIC_SITE_URL`, `RESEND_API_KEY`, `CONTACT_TO_EMAIL`.
 4. Deploy. Subsequent pushes deploy automatically.
+
+## Conventions worth knowing
+
+- **Dark sections** carry `data-surface="dark"`. The custom cursor hit-tests
+  for it, and the header uses it to flip the wordmark to the light palette.
+  Any new ink-coloured section must set it.
+- **Display type** is sized in viewport units with no rem floor
+  (`.display-hero`, `.display-section`), so the longest unbreakable word always
+  fits. Widening a headline means re-checking those multipliers.
+- `mix-blend-difference` is deliberately *not* used for the cursor or wordmark:
+  their own `z-index` creates a stacking context, leaving no page backdrop to
+  blend against.
 
 ## Accessibility & Performance
 

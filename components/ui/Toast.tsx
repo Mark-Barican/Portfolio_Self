@@ -86,7 +86,7 @@ export function Toast({
       <div
         role="status"
         aria-live="polite"
-        className="pointer-events-auto relative w-[min(21rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-accent/30 bg-card/90 p-4 shadow-elevated backdrop-blur-xl"
+        className="pointer-events-auto relative w-[min(21rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border-2 border-ink bg-card/95 p-4 shadow-lifted backdrop-blur-xl"
         style={{
           transform: offscreen ? "translateX(130%)" : "translateX(0)",
           opacity: offscreen ? 0 : 1,
@@ -94,7 +94,7 @@ export function Toast({
         }}
       >
         <div className="flex items-start gap-3">
-          <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-accent/15 text-accent">
+          <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-ink bg-accent text-ink">
             <LuCheck size={17} />
           </span>
           <div className="min-w-0">
@@ -102,7 +102,7 @@ export function Toast({
             <p className="mt-0.5 text-sm leading-relaxed text-muted">
               {typed}
               {!reduced && typed.length < message.length && (
-                <span className="ml-px inline-block h-4 w-[2px] translate-y-[3px] animate-pulse bg-accent align-middle" />
+                <span className="ml-px inline-block h-4 w-[2px] translate-y-[3px] animate-pulse bg-ink align-middle" />
               )}
             </p>
           </div>
@@ -111,7 +111,7 @@ export function Toast({
         {/* Lifetime bar */}
         <span
           aria-hidden
-          className="absolute bottom-0 left-0 h-[3px] w-full origin-left bg-gradient-to-r from-accent to-teal-light"
+          className="absolute bottom-0 left-0 h-[3px] w-full origin-left bg-ink"
           style={
             reduced
               ? undefined

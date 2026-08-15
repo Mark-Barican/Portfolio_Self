@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
-/** Generated favicon — accent tile with the "M" monogram. */
+/** Generated favicon — yellow tile with the "M" monogram. */
 export default function Icon() {
   return new ImageResponse(
     <div
@@ -13,11 +13,12 @@ export default function Icon() {
         height: "100%",
         alignItems: "center",
         justifyContent: "center",
-        background: "#8b5cf6",
-        color: "#ffffff",
+        background: "#ffff23",
+        color: "#0a0a0a",
         fontSize: 22,
-        fontWeight: 700,
+        fontWeight: 800,
         borderRadius: 7,
+        border: "2px solid #0a0a0a",
       }}
     >
       M

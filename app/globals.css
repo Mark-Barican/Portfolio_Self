@@ -1,43 +1,82 @@
 @import "tailwindcss";
 
+/* Registered so GSAP interpolates it as a number rather than swapping strings,
+   and so it has a defined value before any script runs. Drives the capability
+   rows' rule in `@layer components`. */
+@property --rule-scale {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
 /* -------------------------------------------------------------------------- */
-/*  Design tokens — the single palette + type scale for the whole site.       */
-/*  Defined via @theme so Tailwind generates matching utilities               */
-/*  (bg-background, text-muted, text-accent, border-border, …).               */
+/*  Design tokens — warm editorial palette: bone canvas, black ink,           */
+/*  electric-yellow accent. Defined via @theme so Tailwind generates          */
+/*  matching utilities (bg-background, text-ink, bg-accent, …).               */
 /* -------------------------------------------------------------------------- */
 @theme {
-  /* Core palette — black canvas, deep blue surfaces, purple accent,
-     soft off-white text. Blue is the lead brand colour, purple the accent. */
-  --color-background: #000000;
-  --color-surface: #070b16;
-  --color-card: #0e1730;
-  --color-border: rgba(234, 236, 240, 0.08);
-  --color-foreground: #eaecf0;
-  --color-muted: #93a0bd;
-  --color-accent: #8b5cf6;
-  --color-accent-hover: #a78bfa;
-  /* Lead brand colour (blue). Token keeps the `teal` name for compatibility
-     with existing `bg-teal` / `text-teal-light` utilities across the app. */
-  --color-teal: #2563eb;
-  --color-teal-light: #3b82f6;
+  /* Canvas + surfaces (warm bone/cream family). */
+  --color-background: #d5cfbe;
+  --color-surface: #dfdece;
+  --color-card: #ebeada;
+  --color-border: rgba(10, 10, 10, 0.14);
+
+  /* Ink (text) family. */
+  --color-ink: #0a0a0a;
+  --color-foreground: #0a0a0a;
+  --color-muted: #3f403c;
+  /* 0.60, not 0.55.
+   *
+   * This token is the page's quietest ink, and it is only ever set on the
+   * cream surfaces — the work index's numbers, classifications and stack
+   * lines, the journey timestamps, the credential issuers, the form
+   * placeholders. All of those are set between 10px and 13px, so WCAG AA
+   * asks 4.5:1 of them rather than the 3:1 large text gets.
+   *
+   * At 0.55 it measured 3.88:1 on `--color-background` and 4.18:1 on
+   * `--color-card`, so every one of those failed. 0.60 gives 4.51 / 4.75 /
+   * 4.94 across background, surface and card respectively, which clears AA on
+   * all three with the smallest change that does — the token has to stay
+   * visibly quieter than `--color-muted` or the metadata stops receding and
+   * starts competing with the copy it sits under. */
+  --color-faint: rgba(10, 10, 10, 0.6);
+
+  /* Accents. */
+  --color-accent: #ffff23;
+  --color-green: #60d574;
+
+  /* Inverted (black) section tokens. */
+  --color-ink-surface: #111110;
+  --color-cream: #ebeada;
+
+  /* Warm key light used on ink surfaces (the hero glow). Deliberately not an
+     accent: it is lighting, never type or a control, so the electric-yellow
+     accent stays the page's only interactive colour. */
+  --color-glow: #e0a84a;
 
   --font-sans:
-    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    var(--font-archivo), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     sans-serif;
-  --font-mono:
-    var(--font-geist-mono), ui-monospace, "SF Mono", "Fira Code", monospace;
 
-  --shadow-glow: 0 0 40px -10px rgba(139, 92, 246, 0.45);
-  --shadow-elevated: 0 24px 60px -24px rgba(0, 0, 0, 0.9);
+  --shadow-lifted: 0 18px 50px -22px rgba(10, 10, 10, 0.45);
 
   /* Custom keyframes registered for Tailwind's animate-* utilities. */
-  --animate-grid: grid-pan 28s linear infinite;
-  --animate-float: float 9s ease-in-out infinite;
-  --animate-float-slow: float 16s ease-in-out infinite;
-  /* Slow, calm pulsing lights for the ambient background. */
-  --animate-pulse-glow: pulse-glow 12s ease-in-out infinite;
-  --animate-pulse-glow-slow: pulse-glow 18s ease-in-out infinite;
-  --animate-pulse-glow-slower: pulse-glow 24s ease-in-out infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-rise: rise 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98) both;
+  /* Hero: the warm key light breathes, and the availability dot pulses. Both
+     are long and low-amplitude so they read as ambience, not animation. */
+  --animate-glow-drift: glow-drift 16s ease-in-out infinite alternate;
+  /* Deliberately co-prime with the key light's 16s so the two never fall into
+     a visible shared beat — the atmosphere reads as drifting, not looping. */
+  --animate-glow-drift-alt: glow-drift-alt 23s ease-in-out infinite alternate;
+  --animate-status-pulse: status-pulse 2.6s ease-in-out infinite;
+  /* Tooltip entrances, one per side the tooltip can open from. */
+  --animate-tip-up: tip-up 0.16s ease-out both;
+  --animate-tip-down: tip-down 0.16s ease-out both;
+  /* Intro curtain. Driven by CSS rather than JS so the overlay still clears
+     itself if the bundle fails to load — it is server-rendered, so a
+     JS-only exit could otherwise leave the page permanently covered. */
+  --animate-loader-out: loader-out 2.9s cubic-bezier(0.76, 0, 0.24, 1) forwards;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -45,7 +84,22 @@
 /* -------------------------------------------------------------------------- */
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
+
+    /* ------------------------------------------------------------------ */
+    /*  Stacking architecture.                                            */
+    /*                                                                    */
+    /*  Six bands, and nothing on the page is allowed to invent a value   */
+    /*  outside them. Read through the `.layer-*` utilities below rather  */
+    /*  than typed inline, so a layer's role is legible from the markup   */
+    /*  and the whole scale can be re-tuned from one place.               */
+    /* ------------------------------------------------------------------ */
+    --z-base: 0; /* section backgrounds, lighting */
+    --z-decoration: 1; /* backdrop type, grids, atmosphere */
+    --z-content: 10; /* copy, images, headings */
+    --z-interactive: 20; /* buttons, links, hover previews */
+    --z-nav: 50; /* fixed header, scroll progress */
+    --z-overlay: 100; /* modals, menus, toasts, cursor */
   }
 
   * {
@@ -54,30 +108,103 @@
 
   html {
     scroll-behavior: smooth;
-    /* Keep anchored sections clear of the sticky navbar. */
-    scroll-padding-top: 5.5rem;
+    /* **No scroll padding, deliberately.**
+     *
+     * The obvious job for this is keeping anchored sections clear of the fixed
+     * header, and it was set to 5.5rem to do exactly that. The sections do not
+     * need it: every one of them opens with 80px of its own top padding (96px
+     * on contact) against a 79px header, so the heading already clears the nav
+     * by a pixel with the section's top edge at the very top of the viewport.
+     *
+     * What the padding actually did was scroll *short*. Combined with the
+     * `scroll-mt-24` the sections used to carry, an anchor landed 184px early,
+     * and those 184px were spent displaying the bottom of the *previous*
+     * section above the one that had just been asked for. Clicking "Work"
+     * showed a band of Journey's cards, then the heading, then only one project
+     * — with the second pushed off the bottom of the screen.
+     *
+     * At zero the section's own top edge is the top of the viewport, which is
+     * what makes an anchor feel like it arrived somewhere rather than near
+     * somewhere. Section padding is the clearance; this is not. */
+    scroll-padding-top: 0;
     -webkit-text-size-adjust: 100%;
   }
 
   body {
     background-color: var(--color-background);
-    color: var(--color-foreground);
+    color: var(--color-ink);
     font-family: var(--font-sans);
+    /* Slightly larger base so body copy reads comfortably. */
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    /* Desktop gets a further bump so large screens are not mostly margin. */
+    @media (min-width: 1024px) {
+      font-size: 1.15rem;
+    }
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+
+    /* `clip`, not `hidden`.
+     *
+     * `overflow-x: hidden` forces the used value of `overflow-y` to `auto`,
+     * which makes <body> a scroll container in its own right (confirmed: it
+     * computed `auto` here). The document keeps the actual scroll, so
+     * body.scrollTop is pinned at 0 forever, and any library resolving an
+     * element's nearest scrollable ancestor finds <body> and subscribes to a
+     * container that never moves. Framer Motion's `useScroll` resolves targets
+     * that way, so this is a live hazard for every scroll-linked value here.
+     *
+     * `clip` suppresses the horizontal overflow identically without
+     * establishing a scroll container, so `overflow-y` stays `visible`. */
+    overflow-x: clip;
+    /* Editorial poster feel: page text is not selectable. */
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Form fields must stay selectable/editable. */
+  input,
+  textarea {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  /* Opt back in, for the details a visitor needs to *take away*.
+   *
+   * The poster-feel `user-select: none` above is right for prose, but it also
+   * covers the contact address, and that one is not decoration — it is the
+   * thing the whole page points at. The address has a click-to-copy button, so
+   * the happy path never needed selection; the problem is the unhappy one.
+   * `navigator.clipboard` requires a secure context and the copy handler
+   * swallows its own failure, so when the write does not land the visitor gets
+   * no feedback *and* cannot drag-select the text to copy it by hand. The
+   * address is simply unobtainable at that point.
+   *
+   * Marking it selectable restores the manual fallback without touching the
+   * button, and costs nothing when the clipboard works. */
+  [data-selectable],
+  [data-selectable] * {
+    user-select: text;
+    -webkit-user-select: text;
   }
 
   ::selection {
-    background-color: rgba(139, 92, 246, 0.32);
-    color: #fff;
+    background-color: var(--color-accent);
+    color: #0a0a0a;
   }
 
   /* Accessible, on-brand focus ring. */
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-ink);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 2px;
+  }
+
+  /* Ink sections would otherwise draw a near-black ring on a near-black
+     background — invisible. Inside them the ring switches to the accent,
+     which carries a ~16:1 contrast ratio against #111110. */
+  [data-surface="dark"] :focus-visible {
+    outline-color: var(--color-accent);
   }
 
   /* Hide the native cursor while the custom ring cursor is active (desktop). */
@@ -86,21 +213,18 @@
     cursor: none !important;
   }
 
-  /* Tasteful, theme-matched scrollbar. */
+  /* Scrollbars are hidden everywhere (page and inner scroll areas) while
+     scrolling itself stays fully functional. */
+  html,
+  body,
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--color-background);
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(234, 236, 240, 0.12);
-    border-radius: 9999px;
-    border: 2px solid var(--color-background);
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(139, 92, 246, 0.55);
+    width: 0;
+    height: 0;
+    display: none;
   }
 }
 
@@ -108,73 +232,438 @@
 /*  Reusable composite classes                                                */
 /* -------------------------------------------------------------------------- */
 @layer components {
-  /* Frosted glass surface used by the navbar, cards, and modal. */
-  .glass {
-    background-color: rgba(14, 23, 48, 0.55);
-    backdrop-filter: blur(16px) saturate(150%);
-    -webkit-backdrop-filter: blur(16px) saturate(150%);
-    border: 1px solid var(--color-border);
+  /* ---------------------------------------------------------------------- */
+  /*  Stacking utilities — the six bands declared in :root.                  */
+  /*  `isolate` on a section pins its children to that section's context so  */
+  /*  a decorative layer can never escape and land over the header.          */
+  /* ---------------------------------------------------------------------- */
+  .layer-base {
+    z-index: var(--z-base);
+  }
+  .layer-decoration {
+    z-index: var(--z-decoration);
+  }
+  .layer-content {
+    z-index: var(--z-content);
+  }
+  .layer-interactive {
+    z-index: var(--z-interactive);
   }
 
-  /* Soft off-white → warm accent gradient for emphasised headline words. */
-  .text-gradient {
+  /* Decorative layers are inert by definition: they must never take a click
+     from the content sitting above them, and screen readers should not meet
+     them at all (pair with aria-hidden). */
+  .layer-decoration,
+  .layer-base {
+    pointer-events: none;
+  }
+
+  /* Poster/display type — expanded, heavy, tight, ALL CAPS.
+     Pairs with responsive text-* sizes at the call site. */
+  .font-display {
+    font-family: var(--font-sans);
+    font-stretch: 125%;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.92;
+    /* Last-resort break: a word that genuinely cannot fit wraps instead of
+       being clipped by the page's overflow-x. */
+    overflow-wrap: break-word;
+  }
+
+  /* Display sizes are viewport-driven with no rem floor that could exceed the
+     screen, so the longest unbreakable word on each line always fits.
+     Archivo at 800/125% measures ~0.88em per cap, and these multipliers are
+     set against the widest strings in use ("FULL-STACK", "THE WORK") plus the
+     page gutter. Widening a headline means re-checking these. */
+  .display-hero {
+    font-size: min(9.5vw, 11rem);
+  }
+  .display-section {
+    font-size: min(11vw, 7rem);
+  }
+
+
+
+  /* The hero statement, and the one heading on the page set in sentence case.
+     Every section title is ALL CAPS via `.font-display`, but that face is
+     expanded to 125%: at the length of a spoken sentence it would either wrap
+     to five lines or have to be sized down until it stopped reading as a
+     headline. Same family, same weight, only the width axis eased back and the
+     caps dropped — so it still belongs to the poster, at speaking volume.
+
+     Sized fluidly with no forced line breaks: the copy re-wraps at every width
+     instead of relying on <br>s that only hold at one. */
+  .display-lede {
+    font-family: var(--font-sans);
+    font-stretch: 110%;
+    font-weight: 800;
+    letter-spacing: -0.032em;
+    line-height: 0.98;
+    /* Tuned against the longest line, "I build fast, scalable", which runs
+       ~10.8em in Archivo 800 at 110% width. Two ranges, because the headline
+       gets two different measures:
+
+       Below `lg` it has the full page width, so it can take 7.5vw before that
+       line stops fitting. From `lg` the hero splits and it drops into a
+       seven-column slot — ~54% of the viewport up to the 90rem container cap —
+       where 4.5vw is the most it can hold. The shared 4.25rem ceiling stops it
+       growing once the container itself stops.
+
+       Widening this copy means re-measuring both. */
+    font-size: clamp(2.1rem, 7.5vw, 4.25rem);
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+
+    @media (min-width: 64rem) {
+      font-size: clamp(2.1rem, 4.5vw, 4.25rem);
+    }
+  }
+
+  /* Accent rule under a single word of the lede. Drawn as a background layer
+     rather than a border so it sits under the descenders, and grown from zero
+     on load — the width is the animation, so there is nothing to reset for
+     reduced-motion users beyond the global duration kill-switch. */
+  .lede-underline {
     background-image: linear-gradient(
-      120deg,
-      #eaecf0 0%,
-      #93c5fd 46%,
-      var(--color-accent) 100%
+      var(--color-accent),
+      var(--color-accent)
     );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 0.075em;
+    padding-bottom: 0.08em;
+    animation: underline-in 0.9s cubic-bezier(0.21, 0.47, 0.32, 0.98) 1.15s both;
   }
 
-  /* Animated dotted/line grid used across background layers. */
-  .grid-pattern {
+  /* Hairline graph paper, faded out radially so it never reaches an edge and
+     announces itself. Pure gradients — no image request. */
+  .hero-grid {
     background-image:
-      linear-gradient(to right, rgba(234, 236, 240, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(234, 236, 240, 0.05) 1px, transparent 1px);
-    background-size: 56px 56px;
+      linear-gradient(
+        to right,
+        rgba(235, 234, 218, 0.055) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(235, 234, 218, 0.055) 1px,
+        transparent 1px
+      );
+    background-size: 78px 78px;
+    mask-image: radial-gradient(
+      ellipse 85% 70% at 50% 42%,
+      black 0%,
+      transparent 100%
+    );
+  }
+
+  /* Capability row rule.
+   *
+   * Drawn as a scaled pseudo-element rather than a `border-top`, because the
+   * entrance animates it in from the left and a border cannot be scaled
+   * independently of the box it belongs to. `--rule-scale` is what GSAP
+   * animates; at rest it is 1, so the rule is simply there with no script. */
+  .cap-row::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background-color: rgba(235, 234, 218, 0.15);
+    transform: scaleX(var(--rule-scale, 1));
+    transform-origin: left center;
+  }
+
+  /* Prominence, applied by ScrollTrigger's `toggleClass` while a row occupies
+   * the reading band. Deliberately small: the title is already at display size
+   * and never changes, so the row gains focus by its *supporting* marks coming
+   * up rather than by anything moving far enough to be distracting.
+   *
+   * Transitioned in CSS rather than tweened, because it toggles twice per row
+   * over the whole section. Colour and a 3px lift are the only changes, and
+   * neither can shift the row's neighbours. */
+  /* The index column this also styled is gone, so the accent no longer has a
+     number to move to. The tool line and the rule carry the live state on
+     their own, which is quieter but still reads as the row coming forward. */
+  .cap-row__tools {
+    transition:
+      color 0.45s ease,
+      transform 0.45s ease;
+  }
+  .cap-row--live .cap-row__tools {
+    color: rgba(235, 234, 218, 0.72);
+  }
+  .cap-row--live::before {
+    background-color: rgba(235, 234, 218, 0.32);
+  }
+  .cap-row::before {
+    transition: background-color 0.45s ease;
+  }
+
+  /* Small editorial label: spaced sans caps, used for nav, tags and captions.
+     Sans rather than mono keeps the page to a single font family. */
+  .eyebrow {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    line-height: 1.3;
+  }
+
+  /* Hollow/outlined display text used for oversized backdrop words.
+   *
+   * The stroke is sized in `em` with a pixel floor, not at a fixed 1.5px.
+   * These classes are used from ~2rem (the "Talk" headline) up to 19vw
+   * (section ground), and one absolute width cannot serve both: 1.5px reads as
+   * a proper drawn outline on the headline and as an illegible hairline at
+   * backdrop size, which is what made the oversized words register as noise
+   * rather than as type. Scaling with the glyph keeps the weight *relative*
+   * constant, so a backdrop word is as readable as the headline is.
+   *
+   * `max()` keeps it from disappearing below ~1.4rem, where 0.014em would
+   * round to sub-pixel and drop out entirely on a non-retina screen. */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: max(1.5px, 0.014em) rgba(10, 10, 10, 0.55);
+  }
+  .text-outline-cream {
+    color: transparent;
+    -webkit-text-stroke: max(1.5px, 0.014em) rgba(235, 234, 218, 0.6);
   }
 
   /* Subtle film-grain overlay (pure CSS, no image request). */
   .noise {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
+
+  /* ---------------------------------------------------------------------- */
+  /*  Link interaction system.                                               */
+  /*                                                                         */
+  /*  Five expressions, one vocabulary. Every hover on this page is built     */
+  /*  from the same two primitives — an accent layer that sweeps from an      */
+  /*  edge, and a transform in the direction of travel — so a nav item, a     */
+  /*  project row and a social icon feel related without animating alike.     */
+  /*  What varies is the axis, the origin and the weight, which is what makes */
+  /*  the interaction tell you *what kind of thing* you are pointing at.      */
+  /*                                                                         */
+  /*  All of it is CSS on `:hover`/`:focus-visible`, which matters for two    */
+  /*  reasons: keyboard users get the identical treatment for free, and none  */
+  /*  of it costs a React render or a scroll-time listener. The colour never  */
+  /*  moves to a sweeping layer alone — the label keeps its own contrast at   */
+  /*  every point of the transition, so nothing is unreadable mid-sweep.      */
+  /*                                                                         */
+  /*  The reduced-motion block at the foot of this file collapses every       */
+  /*  duration here to ~0, so these become instant state changes rather than  */
+  /*  being removed. The affordance survives; the motion does not.            */
+  /* ---------------------------------------------------------------------- */
+
+  [data-link] {
+    position: relative;
+  }
+
+  /* -- Navigation: an accent rule draws in under the label ---------------- */
+  /*
+   * **This replaced a roll-over that duplicated the label, and the duplicate
+   * is gone because it could not be made to work.**
+   *
+   * That version set the item as an `inline-grid` with `overflow: hidden` and
+   * stacked a copy of the label — `content: attr(data-label)` — one row below,
+   * translated down by 110% of its own height, so hovering rolled one out and
+   * the other in. The clip is what failed. `overflow` clips at the *padding*
+   * box, not the content box, and both the header items and the footer items
+   * carry `py-2` from Tailwind, which lands in a later cascade layer than this
+   * rule and so overrides its own `padding-block`. Measured: the copy travels
+   * 18.3px while it needs 24.6px to clear the box, leaving 6.3px of a second,
+   * upside-down-looking word sitting permanently under every nav item — at
+   * rest, with no pointer anywhere near it.
+   *
+   * Chasing the number would not have fixed it either: the required travel
+   * depends on padding that is set per call site, so any fixed percentage is
+   * wrong for some instance. The mechanism needed a clip to work at all, and a
+   * clip cannot be made reliable here.
+   *
+   * So the label does not move and there is no second copy of it. The rule
+   * grows from the left edge instead — the same left-origin sweep the project
+   * rows and the CTA use, so the nav still belongs to the page's interaction
+   * family. Nothing is clipped, nothing is duplicated, and there is no text in
+   * the document that a screen reader could meet twice.
+   *
+   * It hangs off `.link-label` rather than the anchor, so it tracks the *text*
+   * and is unaffected by whatever padding a call site adds. Transform-only,
+   * and composited.
+   */
+  [data-link="nav"] {
+    position: relative;
+  }
+  [data-link="nav"] .link-label {
+    position: relative;
+    display: inline-block;
+  }
+  [data-link="nav"] .link-label::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    /* Just clear of the baseline: close enough to belong to the word, far
+       enough not to touch the descenders in "Journey". */
+    bottom: -0.34em;
+    height: 2px;
+    background-color: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  [data-link="nav"]:hover .link-label::after,
+  [data-link="nav"]:focus-visible .link-label::after {
+    transform: scaleX(1);
+  }
+
+  /* The active header item already states itself with a filled ink pill, and a
+     yellow rule inside that pill reads as a second, competing indicator. */
+  [data-link="nav"][aria-current] .link-label::after {
+    content: none;
+  }
+
+  /* -- Call to action: the accent deepens and an ink rule draws under it -- */
+  /*
+   * **This deliberately never fills with ink.**
+   *
+   * It used to: a circular ink wash rose from the foot of the button and the
+   * label went cream. On the yellow primary CTA that turned a bright, obvious
+   * "View My Work" into a plain black rectangle the instant the pointer touched
+   * it — the accent, which is the one interactive colour on the page, vanished
+   * exactly when the reader was signalling intent. Inverting a coloured button
+   * on hover throws away the very thing that marks it as the primary action.
+   *
+   * So the accent stays, and the feedback comes from *depth* instead: the fill
+   * deepens a step, an ink rule draws across the foot from the left, and the
+   * label holds its ink colour throughout. Nothing about the button's identity
+   * changes; it just acknowledges the pointer.
+   */
+  [data-link="cta"] {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      background-color 0.35s ease,
+      transform 0.35s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+  }
+  /* The rule. Drawn from the left, under the label, inside the button's own
+     radius — the same left-origin sweep the nav and project rows use, so the
+     CTA belongs to the same interaction family. */
+  [data-link="cta"]::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 3px;
+    background-color: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.45s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+  }
+  [data-link="cta"]:hover::after,
+  [data-link="cta"]:focus-visible::after {
+    transform: scaleX(1);
+  }
+  /* A step deeper than `--color-accent`, not a different hue: still
+     unmistakably the accent, just under pressure. */
+  [data-link="cta"]:hover,
+  [data-link="cta"]:focus-visible {
+    background-color: #f2e500;
+  }
+
+  /* -- Tech list items: the mark leads, the name follows ------------------ */
+  [data-link="tech"] {
+    transition:
+      color 0.3s ease,
+      transform 0.3s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+  }
+  [data-link="tech"]:hover {
+    transform: translateY(-2px);
+  }
+
+  /* -- Contact / social carry their sweep and slide inline at the call site,
+        because both need to coordinate with sibling elements (an arrow, a
+        bordered disc) that CSS here cannot reach. They are listed in the
+        system for completeness, and marked so the cursor can read them. --- */
+
 }
 
 /* -------------------------------------------------------------------------- */
 /*  Keyframes                                                                  */
 /* -------------------------------------------------------------------------- */
-@keyframes grid-pan {
-  0% {
-    background-position: 0 0;
+/* Intro curtain: holds while the counter runs, then wipes up off-screen.
+   `forwards` keeps it parked off-screen, and under the reduced-motion rules
+   below it snaps straight to the end state. */
+@keyframes loader-out {
+  0%,
+  76% {
+    transform: translateY(0);
   }
   100% {
-    background-position: 56px 56px;
+    transform: translateY(-100%);
   }
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
+/* Hero accent rule, drawn left to right under one word of the lede. */
+@keyframes underline-in {
+  from {
+    background-size: 0% 0.075em;
   }
-  50% {
-    transform: translate3d(0, -22px, 0);
+  to {
+    background-size: 100% 0.075em;
   }
 }
 
-/* Gentle breathing glow — opacity + scale only, so it stays compositor-cheap. */
-@keyframes pulse-glow {
+/* Hero key light: a slow, shallow drift so the warm pool behind the portrait
+   never sits perfectly still. Translation and scale only — both composited. */
+@keyframes glow-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-2.5%, 2%, 0) scale(1.07);
+  }
+}
+
+/* Atmosphere: the cool fill on the type side, counter-drifting to the key
+   light so the two open and close the gap between them instead of sliding in
+   parallel. Same composited pair of properties. */
+@keyframes glow-drift-alt {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.04);
+    opacity: 0.75;
+  }
+  to {
+    transform: translate3d(4%, -3%, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Availability dot on the hero status card. */
+@keyframes status-pulse {
   0%,
   100% {
-    opacity: 0.3;
+    opacity: 1;
     transform: scale(1);
   }
   50% {
-    opacity: 0.8;
-    transform: scale(1.18);
+    opacity: 0.45;
+    transform: scale(0.86);
+  }
+}
+
+/* Generic "slide up into place" used by the 404 and loader type. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -190,6 +679,30 @@
   100% {
     transform: translate(16px, -16px) rotate(12deg);
     opacity: 0;
+  }
+}
+
+/* Built-with tooltips. Fast, small, and in the direction the tooltip opened
+   from — up when it sits above its mark, down when it has flipped below.
+   Opacity and transform only; no bounce, no scale beyond a hair. */
+@keyframes tip-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+@keyframes tip-down {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 

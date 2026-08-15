@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  type CSSProperties,
-  type ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-
-type Direction = "up" | "down" | "left" | "right" | "none";
+import { type ElementType, type ReactNode, useRef } from "react";
+import { gsap, SCROLL_IN_OUT } from "@/lib/gsap";
+import { useGsap } from "@/hooks/useGsap";
 
 interface RevealProps {
   children: ReactNode;
@@ -17,108 +11,62 @@ interface RevealProps {
   delay?: number;
   /** Travel distance in px for the slide-in. */
   distance?: number;
-  direction?: Direction;
   /** Adds a blur-in for a cinematic feel. */
   blur?: boolean;
-  /** Re-run the animation every time it enters the viewport. */
-  once?: boolean;
-  as?: "div" | "li" | "span" | "section";
+  as?: ElementType;
 }
 
-const offset = (direction: Direction, distance: number) => {
-  switch (direction) {
-    case "up":
-      return `translate3d(0, ${distance}px, 0)`;
-    case "down":
-      return `translate3d(0, -${distance}px, 0)`;
-    case "left":
-      return `translate3d(${distance}px, 0, 0)`;
-    case "right":
-      return `translate3d(-${distance}px, 0, 0)`;
-    default:
-      return "translate3d(0, 0, 0)";
-  }
-};
-
-const EASE = "cubic-bezier(0.21, 0.47, 0.32, 0.98)";
-
 /**
- * Scroll-reveal wrapper: slides and (optionally) un-blurs its children into
- * view as they enter the viewport, driven by IntersectionObserver + CSS.
+ * Scroll-reveal wrapper: eases its children up into place the first time they
+ * enter the viewport.
  *
- * Deliberately does NOT use a JS animation runtime: opacity is applied
- * *instantly* (never transitioned), so content can never be trapped invisible
- * by a stalled animation — only the slide/blur transition. A fail-safe timeout
- * reveals the content even if the observer never fires, and reduced-motion
- * renders everything statically.
+ * The element is fully visible in CSS and GSAP animates *from* a hidden start
+ * state, set before the first paint. That ordering is deliberate — content can
+ * never be stranded invisible by a script that failed to run, a reduced-motion
+ * preference, or a ScrollTrigger that never fired. The worst case is that the
+ * animation is skipped and the content is simply there.
+ *
+ * The reveal is reversible. `SCROLL_IN_OUT` plays it on the way down and plays
+ * it back out when the reader scrolls up past it, so the motion always follows
+ * the direction of travel rather than firing once and staying put.
  */
 export function Reveal({
   children,
   className,
   delay = 0,
   distance = 24,
-  direction = "up",
   blur = true,
-  once = true,
-  as = "div",
+  as: Tag = "div",
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
-  const [shown, setShown] = useState(false);
-  const [reduced, setReduced] = useState(false);
-  const Tag = as as "div";
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+  useGsap(
+    () => {
+      const el = ref.current;
+      if (!el) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setReduced(true);
-      setShown(true);
-      return;
-    }
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setShown(true);
-            if (once) io.disconnect();
-          } else if (!once) {
-            setShown(false);
-          }
-        }
-      },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.01 },
-    );
-    io.observe(el);
-
-    // Fail-safe: if the observer never reports (odd layouts, zero-height
-    // ancestors, etc.), reveal anyway so content is never stuck hidden.
-    const failSafe = window.setTimeout(() => setShown(true), 1400);
-
-    return () => {
-      io.disconnect();
-      window.clearTimeout(failSafe);
-    };
-  }, [once]);
-
-  const style: CSSProperties = {
-    opacity: shown ? 1 : 0,
-    transform: shown ? "translate3d(0, 0, 0)" : offset(direction, distance),
-    filter: shown || !blur ? "blur(0px)" : "blur(8px)",
-    // Note: opacity is intentionally absent from the transition list.
-    transition: reduced
-      ? "none"
-      : `transform 0.7s ${EASE} ${delay}s, filter 0.7s ${EASE} ${delay}s`,
-    willChange: "transform, filter",
-  };
+      gsap.from(el, {
+        opacity: 0,
+        y: distance,
+        filter: blur ? "blur(8px)" : "none",
+        duration: 0.85,
+        delay,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: el,
+          // Fire a little before the block is fully on screen, so it is
+          // settled by the time it is actually being read.
+          start: "top 88%",
+          toggleActions: SCROLL_IN_OUT,
+        },
+      });
+    },
+    ref,
+    [delay, distance, blur],
+  );
 
   return (
-    <Tag
-      ref={ref as React.RefObject<HTMLDivElement>}
-      className={className}
-      style={style}
-    >
+    <Tag ref={ref} className={className}>
       {children}
     </Tag>
   );

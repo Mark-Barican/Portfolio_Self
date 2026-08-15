@@ -24,35 +24,6 @@ export interface Stat {
   label: string;
 }
 
-/** A grouped collection of related skills. */
-export interface SkillCategory {
-  title: string;
-  description: string;
-  skills: Skill[];
-}
-
-/** An individual technology / tool. */
-export interface Skill {
-  name: string;
-  icon: IconType;
-}
-
-/** A role in the experience timeline. */
-export interface ExperienceItem {
-  id: string;
-  role: string;
-  company: string;
-  /** Representative icon used as the company "logo" placeholder. */
-  icon: IconType;
-  type?: string;
-  location?: string;
-  period: string;
-  /** Bullet-point achievements, surfaced when the entry is expanded. */
-  highlights: string[];
-  /** Key technologies used in the role. */
-  stack?: string[];
-}
-
 /** Project category used for subtle labelling and filtering. */
 export type ProjectCategory =
   | "Full-Stack"
@@ -95,5 +66,35 @@ export interface Project {
 export interface Certification {
   issuer: string;
   title: string;
-  icon: IconType;
+  /**
+   * Issuer brand mark. Optional because react-icons does not carry every
+   * company logo — Simple Icons has dropped some (IBM among them) over
+   * trademark policy. Issuers without one use `monogram` in the same tile.
+   */
+  icon?: IconType;
+  /** Typographic fallback shown when no brand icon exists. */
+  monogram?: string;
+}
+
+/** A chapter in the "My Journey" story timeline. */
+export interface JourneyItem {
+  /** Short year tag rendered big on the card, e.g. "'21". */
+  year: string;
+  /** Full year used in the expanded story, e.g. "2021". */
+  fullYear: string;
+  title: string;
+  /** One-two sentence teaser shown on the collapsed card. */
+  short: string;
+  /** Longer narrative revealed on expand. */
+  story: string;
+  /** Playful @handle credit, heynesh-style. */
+  handle: string;
+}
+
+/** A capability row in the "What You Get" section. */
+export interface Capability {
+  title: string;
+  description: string;
+  /** Representative tools/tech shown as small tags. */
+  tools: string[];
 }

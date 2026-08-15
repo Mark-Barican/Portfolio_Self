@@ -1,83 +1,32 @@
 import {
-  SiTypescript,
-  SiJavascript,
-  SiPython,
-  SiCplusplus,
-  SiC,
-  SiPhp,
-  SiDart,
-  SiReact,
   SiNextdotjs,
-  SiTailwindcss,
-  SiFramer,
-  SiThreedotjs,
-  SiBootstrap,
-  SiJquery,
-  SiHtml5,
-  SiCss,
-  SiNodedotjs,
-  SiLaravel,
-  SiPrisma,
-  SiGraphql,
-  SiJsonwebtokens,
-  SiPostgresql,
-  SiMysql,
-  SiMongodb,
-  SiSqlite,
-  SiFirebase,
-  SiShopify,
+  SiGsap,
   SiVercel,
-  SiGooglecloud,
-  SiCloudflare,
   SiCisco,
   SiAlibabacloud,
-  SiApache,
-  SiGit,
-  SiGithub,
-  SiClaude,
-  SiOpenai,
-  SiN8N,
-  SiFigma,
-  SiUnity,
-  SiBlender,
-  SiPandas,
-  SiNumpy,
-  SiTensorflow,
-  SiPlotly,
+  SiReact,
+  SiTypescript,
+  SiTailwindcss,
+  SiNodedotjs,
+  SiResend,
 } from "react-icons/si";
+import { FaLinkedinIn, FaGithub } from "react-icons/fa6";
 import {
-  FaJava,
-  FaLinkedinIn,
-  FaGithub,
-  FaArrowUpRightFromSquare,
-} from "react-icons/fa6";
-import {
-  LuDatabase,
-  LuServer,
-  LuDroplet,
-  LuContainer,
-  LuCloud,
   LuMail,
-  LuShieldCheck,
-  LuNetwork,
   LuLandmark,
   LuBike,
   LuDices,
   LuClapperboard,
   LuWrench,
   LuHeart,
-  LuCode,
-  LuSparkles,
-  LuFlower2,
-  LuGamepad2,
+  LuUtensilsCrossed,
 } from "react-icons/lu";
-import { DiPhotoshop } from "react-icons/di";
 import type { IconType } from "react-icons";
 import type {
+  Capability,
   Certification,
-  ExperienceItem,
+  JourneyItem,
   Project,
-  SkillCategory,
   SocialLink,
   Stat,
 } from "@/types";
@@ -87,8 +36,16 @@ import { LINKS, SITE } from "@/lib/constants";
 /*  About — summary + headline stats                                          */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The About introduction.
+ *
+ * Deliberately two short sentences. The previous version listed the stack in
+ * the middle of it, which turned a personal introduction into a résumé line and
+ * made it long enough that the typing reveal it drives outlasted the reader's
+ * patience. The stack already has a whole section to itself.
+ */
 export const SUMMARY =
-  "Full-stack developer with 5+ years building and shipping production web applications across freelance and contract work. Fluent in the modern web stack — Next.js, React, TypeScript, Node.js, and PostgreSQL — with hands-on experience in e-commerce (Shopify/Liquid), full-stack systems, and interactive 3D web. I own projects end to end: requirements, architecture, client communication, and deployment.";
+  "I'm a full-stack developer in Quezon City. I take products from the first conversation through to live deployment, and I own every part in between.";
 
 export const STATS: Stat[] = [
   { value: 5, suffix: "+", label: "Years Experience" },
@@ -97,156 +54,98 @@ export const STATS: Stat[] = [
   { value: 100, suffix: "", label: "Lighthouse Peaks" },
 ];
 
+
 /* -------------------------------------------------------------------------- */
-/*  Skills — grouped by discipline                                            */
+/*  Journey — the story timeline, built from the experience above             */
 /* -------------------------------------------------------------------------- */
 
-export const SKILL_CATEGORIES: SkillCategory[] = [
+export const JOURNEY: JourneyItem[] = [
   {
-    title: "Languages",
-    description: "The foundations I build on.",
-    skills: [
-      { name: "TypeScript", icon: SiTypescript },
-      { name: "JavaScript", icon: SiJavascript },
-      { name: "Python", icon: SiPython },
-      { name: "Java", icon: FaJava },
-      { name: "C++", icon: SiCplusplus },
-      { name: "C", icon: SiC },
-      { name: "PHP", icon: SiPhp },
-      { name: "Dart", icon: SiDart },
-      { name: "SQL", icon: LuDatabase },
-    ],
+    year: "'21",
+    fullYear: "2021",
+    title: "Where it started",
+    short:
+      "A game studio apprenticeship. Unity, C#, and the moment code became something you could feel.",
+    story:
+      "At Definite Studios I built 2D platformers, side-scrollers and a 3D shooter prototype in Unity: mechanics, physics, even the Photoshop assets. Games taught me software isn't just logic, it's experience. That same year I took my first freelance job, and I've been shipping for clients ever since.",
+    handle: "@definitestudios",
   },
   {
-    title: "Frontend",
-    description: "Interfaces that feel fast and intentional.",
-    skills: [
-      { name: "React", icon: SiReact },
-      { name: "Next.js", icon: SiNextdotjs },
-      { name: "Tailwind CSS", icon: SiTailwindcss },
-      { name: "Framer Motion", icon: SiFramer },
-      { name: "Three.js", icon: SiThreedotjs },
-      { name: "Bootstrap", icon: SiBootstrap },
-      { name: "jQuery", icon: SiJquery },
-      { name: "HTML5", icon: SiHtml5 },
-      { name: "CSS3", icon: SiCss },
-    ],
+    year: "'22",
+    fullYear: "2022",
+    title: "Going full-stack",
+    short:
+      "Client work pulled me out of tutorials and into real production problems.",
+    story:
+      "Freelance projects meant auth, databases, deployments and clients with deadlines. Next.js and TypeScript became home base, PostgreSQL and Node the engine room. Computer Science at CIIT by day, client work by night.",
+    handle: "@ciit",
   },
   {
-    title: "Backend & APIs",
-    description: "Reliable services and clean contracts.",
-    skills: [
-      { name: "Node.js", icon: SiNodedotjs },
-      { name: "Laravel", icon: SiLaravel },
-      { name: "Prisma", icon: SiPrisma },
-      { name: "REST APIs", icon: LuServer },
-      { name: "GraphQL", icon: SiGraphql },
-      { name: "JWT Auth", icon: SiJsonwebtokens },
-    ],
+    year: "'24",
+    fullYear: "2024",
+    title: "First production storefront",
+    short:
+      "A 3-dev team, a full Shopify storefront revamp. It launched, and it's still live.",
+    story:
+      "At Boxed Blossoms I architected the initial build on Shopify Hydrogen with Oxygen and GraphQL, then made the hard call to re-platform to themes and Liquid to hit the deadline. Real team, real client, real launch. The storefront is still in production today.",
+    handle: "@boxedblossoms",
   },
   {
-    title: "Databases & E-Commerce",
-    description: "Where the data lives and the sales happen.",
-    skills: [
-      { name: "PostgreSQL", icon: SiPostgresql },
-      { name: "MySQL", icon: SiMysql },
-      { name: "MongoDB", icon: SiMongodb },
-      { name: "SQLite", icon: SiSqlite },
-      { name: "Firebase", icon: SiFirebase },
-      { name: "Shopify", icon: SiShopify },
-      { name: "Liquid", icon: LuDroplet },
-      { name: "Hydrogen", icon: LuContainer },
-      { name: "Oxygen", icon: LuCloud },
-    ],
+    year: "'25",
+    fullYear: "2025",
+    title: "Shipping season",
+    short:
+      "A skincare storefront, an award-nominated loan platform, and a simulator that found 5,000+ users.",
+    story:
+      "Delivered a responsive e-commerce site for Rise Beauty & Wellness. Built LoanLink, a full loan management system nominated for the Inabel Awards. And a probability engine I made for fun, the Endfield Gacha Simulator, quietly grew past 5,000 users. Everything compounding at once.",
+    handle: "@rise",
   },
   {
-    title: "Cloud & DevOps",
-    description: "Shipping and keeping things online.",
-    skills: [
-      { name: "Vercel", icon: SiVercel },
-      { name: "Google Cloud", icon: SiGooglecloud },
-      { name: "Cloudflare", icon: SiCloudflare },
-      { name: "Apache", icon: SiApache },
-      { name: "Git", icon: SiGit },
-      { name: "GitHub", icon: SiGithub },
-    ],
-  },
-  {
-    title: "Tools & AI",
-    description: "Force multipliers in my daily workflow.",
-    skills: [
-      { name: "Claude Code", icon: SiClaude },
-      { name: "Codex", icon: SiOpenai },
-      { name: "n8n", icon: SiN8N },
-      { name: "Figma", icon: SiFigma },
-      { name: "Unity", icon: SiUnity },
-      { name: "Blender", icon: SiBlender },
-      { name: "Photoshop", icon: DiPhotoshop },
-      { name: "Pandas", icon: SiPandas },
-      { name: "NumPy", icon: SiNumpy },
-      { name: "TensorFlow", icon: SiTensorflow },
-      { name: "Plotly", icon: SiPlotly },
-    ],
+    year: "'26",
+    fullYear: "2026",
+    title: "The journey continues",
+    short:
+      "Interactive 3D, AI-accelerated workflows, and whatever ships next. Open to work.",
+    story:
+      "Now I'm folding Three.js and WebGL into client work, running Claude Code and n8n in my daily loop, and looking for the next thing worth building. Five years in, still obsessed.",
+    handle: "@mark",
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  Experience timeline                                                       */
+/*  Capabilities — the "What You Get" rows (condensed from the skills)        */
 /* -------------------------------------------------------------------------- */
 
-export const EXPERIENCE: ExperienceItem[] = [
+export const CAPABILITIES: Capability[] = [
   {
-    id: "freelance",
-    role: "Freelance Software Engineer / Full-Stack Developer",
-    company: "Self-Employed",
-    icon: LuCode,
-    type: "Freelance",
-    period: "Mar 2021 — Present",
-    stack: ["Next.js", "React", "TypeScript", "Node.js", "PostgreSQL", "MySQL"],
-    highlights: [
-      "Delivered 4 end-to-end client engagements — custom websites and web-based systems — owning scope from requirements to deployment.",
-      "Built production web apps with Next.js, React, TypeScript and Node.js on PostgreSQL/MySQL, managing client requirements and timelines directly.",
-    ],
+    title: "Full-Stack Development",
+    description:
+      "Requirements to deployment, owned by one person. No handoffs, no gaps.",
+    tools: ["Next.js", "React", "TypeScript", "Node.js", "PostgreSQL"],
   },
   {
-    id: "rise",
-    role: "E-Commerce Developer",
-    company: "Rise Beauty & Wellness Corp",
-    icon: LuSparkles,
-    type: "Contract",
-    period: "May — Jul 2025",
-    stack: ["E-Commerce", "Responsive UI", "Storefront"],
-    highlights: [
-      "Developed and deployed a responsive e-commerce website for a skincare brand, building product catalog pages and customer-facing storefront UI.",
-    ],
+    title: "E-Commerce & Shopify",
+    description:
+      "Storefronts that sell. Shopify themes, Liquid, and headless Hydrogen builds.",
+    tools: ["Shopify", "Liquid", "Hydrogen", "GraphQL"],
   },
   {
-    id: "boxed-blossoms",
-    role: "Frontend Developer",
-    company: "Boxed Blossoms",
-    icon: LuFlower2,
-    type: "Remote",
-    location: "Makati, PH",
-    period: "Nov 2024 — Feb 2025",
-    stack: ["Shopify", "Hydrogen", "Oxygen", "GraphQL", "Liquid"],
-    highlights: [
-      "Revamped the company's full Shopify storefront within a 3-developer team led by a project manager; the site launched and remains live in production.",
-      "Architected the initial build on Shopify Hydrogen with Oxygen deployment and GraphQL, then re-platformed to Shopify themes and Liquid to meet delivery timelines.",
-      "Drove timeline and requirement decisions with transparent client communication; customized storefront design and functionality via Liquid, Shopify apps and Photoshop.",
-    ],
+    title: "Interactive 3D & Motion",
+    description:
+      "Three.js product viewers and motion that communicates instead of decorating.",
+    tools: ["Three.js", "WebGL", "Framer Motion", "GSAP"],
   },
   {
-    id: "definite-studios",
-    role: "Game Development Apprentice",
-    company: "Definite Studios",
-    icon: LuGamepad2,
-    location: "Quezon City, PH",
-    period: "2021",
-    stack: ["Unity", "C#", "Game Physics", "Photoshop"],
-    highlights: [
-      "Built 2D platformer, side-scroller and 3D shooter prototypes in Unity, implementing core game mechanics and physics.",
-      "Produced game-ready assets in Photoshop.",
-    ],
+    title: "Performance & SEO",
+    description:
+      "Lighthouse peaks of 100. Speed and search built in, not bolted on after.",
+    tools: ["Lighthouse 100", "Technical SEO", "Core Web Vitals"],
+  },
+  {
+    title: "AI-Accelerated Workflow",
+    description:
+      "Claude Code, Codex and n8n in the daily loop. Faster iterations, same standards.",
+    tools: ["Claude Code", "Codex", "n8n"],
   },
 ];
 
@@ -262,9 +161,9 @@ export const PROJECTS: Project[] = [
     category: "Full-Stack",
     icon: LuLandmark,
     description:
-      "A production loan platform with multi-role authentication, repayment scheduling, payment processing and a live analytics dashboard.",
+      "A production loan platform with role-based access, repayment scheduling and live analytics. Nominated for the Inabel Awards.",
     overview:
-      "LoanLink is an end-to-end loan management system that models the full lifecycle of a loan — from origination to repayment — behind a role-aware interface. Admins, managers and staff each see a workflow scoped to their permissions, backed by a live analytics dashboard. The project was nominated for the Inabel Awards for design and experience innovation.",
+      "LoanLink is an end-to-end loan management system that models the full lifecycle of a loan, from origination to repayment, behind a role-aware interface. Admins, managers and staff each see a workflow scoped to their permissions, backed by a live analytics dashboard. The project was nominated for the Inabel Awards for design and experience innovation.",
     tech: ["Next.js 15", "React 19", "PostgreSQL", "Tailwind CSS", "JWT"],
     features: [
       "Multi-role authentication across Admin / Manager / Staff tiers",
@@ -300,9 +199,9 @@ export const PROJECTS: Project[] = [
     category: "E-Commerce",
     icon: LuBike,
     description:
-      "A multi-page storefront with an interactive Three.js / WebGL viewer for real-time 3D product rotation, zoom and inspection. (Client demo.)",
+      "A storefront where every product can be rotated and inspected in real-time 3D. Client demo.",
     overview:
-      "Vintage Rider Manila is a full e-commerce storefront built around an immersive product experience. Beyond the usual catalog, cart and accounts, each product can be inspected in 3D — rotated, zoomed and examined in real time through a WebGL viewer. Built as a client demo.",
+      "Vintage Rider Manila is a full e-commerce storefront built around an immersive product experience. Beyond the usual catalog, cart and accounts, each product can be inspected in 3D: rotated, zoomed and examined in real time through a WebGL viewer. Built as a client demo.",
     tech: ["Next.js", "TypeScript", "Three.js", "WebGL"],
     features: [
       "Multi-page storefront with product catalog and category filtering",
@@ -338,7 +237,7 @@ export const PROJECTS: Project[] = [
     category: "Simulation",
     icon: LuDices,
     description:
-      "A simulation engine modeling soft/hard pity, spark guarantees and banner rules — validated against official rates and adopted by 5,000+ users.",
+      "A probability engine matching the game's real pity and spark rules. Used by 5,000+ people.",
     overview:
       "Endfield Gacha Simulator is a probability engine that reproduces a gacha system's real mechanics: soft and hard pity thresholds, spark guarantees and banner-specific rules. Outcomes are validated against officially published rates so simulations stay accurate and reproducible. The tool has been adopted by 5,000+ users.",
     tech: ["Next.js", "TypeScript", "Python"],
@@ -371,22 +270,22 @@ export const PROJECTS: Project[] = [
     category: "Brand Site",
     icon: LuClapperboard,
     description:
-      "A high-end, cinematic single-page brand site with animated section transitions — scoring 94–100 Performance, 100 SEO, 100 Best Practices, 96 Accessibility.",
+      "A cinematic single-page brand site that still scores 100 SEO and near-perfect performance.",
     overview:
-      "Recraft is a cinematic single-page brand site designed and built for impact. Animated section transitions and a responsive, content-driven layout carry the brand story, while staying ruthlessly fast — it scored 94–100 Performance, 100 SEO, 100 Best Practices and 96 Accessibility in Lighthouse. Built as a client demo.",
+      "Recraft is a cinematic single-page brand site designed and built for impact. Animated section transitions and a responsive, content-driven layout carry the brand story, while staying ruthlessly fast: it scored 94-100 Performance, 100 SEO, 100 Best Practices and 96 Accessibility in Lighthouse. Built as a client demo.",
     tech: ["Next.js", "TypeScript", "CSS"],
     features: [
       "Cinematic single-page narrative with animated section transitions",
       "Responsive, content-driven layout",
-      "Lighthouse 94–100 Performance",
-      "100 SEO · 100 Best Practices · 96 Accessibility",
+      "Lighthouse 94-100 Performance",
+      "100 SEO Â· 100 Best Practices Â· 96 Accessibility",
     ],
     challenges: [
       "Heavy cinematic motion usually comes at the cost of performance and accessibility.",
       "The layout had to stay content-driven and responsive across devices.",
     ],
     solutions: [
-      "Tuned animations and assets to keep Lighthouse Performance in the 94–100 range.",
+      "Tuned animations and assets to keep Lighthouse Performance in the 94-100 range.",
       "Kept SEO, Best Practices and Accessibility near-perfect alongside the visuals.",
     ],
     links: {
@@ -399,13 +298,47 @@ export const PROJECTS: Project[] = [
     gallery: ["/Recraft_images/img1.png", "/Recraft_images/img2.png"],
   },
   {
+    id: "tora",
+    title: "TORA",
+    tagline: "Restaurant Brand & Menu Site",
+    category: "Brand Site",
+    icon: LuUtensilsCrossed,
+    description:
+      "A dark, photography-led site for a modern Japanese restaurant in BGC. Client demo.",
+    overview:
+      "TORA by Tiger is a single-page brand site for a modern Japanese restaurant concept in Bonifacio Global City. A dark, editorial art direction carries the chef's story, signature dishes, a fully sectioned menu, and visit and reservation details, with photography doing the heavy lifting. Built as a client demo.",
+    tech: ["Next.js", "TypeScript", "Tailwind CSS"],
+    features: [
+      "Chef story, signatures and a fully sectioned menu",
+      "Dark, photography-led editorial art direction",
+      "Reservation and visit details with clear calls to action",
+      "Smooth anchor navigation across a single-page layout",
+    ],
+    challenges: [
+      "A long single-page menu had to stay scannable and easy to navigate.",
+      "The moody, image-heavy look could not come at the cost of performance.",
+    ],
+    solutions: [
+      "Split the menu into anchored sections with persistent navigation.",
+      "Served every photo through next/image with tuned sizes and quality.",
+    ],
+    links: {
+      repo: "https://github.com/Mark-Barican/Tora_demo",
+      live: "https://tora-demo.vercel.app",
+    },
+    featured: true,
+    accent: ["#c2410c", "#450a0a"],
+    cover: "/Tora_images/Tora_hero_image.png",
+    gallery: ["/Tora_images/chef.jpg", "/Tora_images/dish.jpg"],
+  },
+  {
     id: "weride",
     title: "WeRide",
     tagline: "Parts Catalog & Lead-Gen Storefront",
     category: "E-Commerce",
     icon: LuWrench,
     description:
-      "A parts catalog and lead-generation storefront tuned for search and speed — Lighthouse 100 SEO and 91 mobile performance.",
+      "A parts catalog built to rank and convert. Lighthouse 100 SEO, 91 on mobile.",
     overview:
       "WeRide is a parts catalog and lead-generation storefront, built to rank and convert. It pairs a browsable catalog with lead capture and was tuned for search and mobile speed, landing a perfect 100 SEO score and 91 mobile performance in Lighthouse.",
     tech: ["Next.js", "TypeScript", "SEO"],
@@ -443,9 +376,9 @@ export const PROJECTS: Project[] = [
     category: "Interactive",
     icon: LuHeart,
     description:
-      "A playful interactive Three.js experience exploring real-time 3D scenes and motion on the web.",
+      "A playful Three.js experiment in real-time 3D scenes and web motion.",
     overview:
-      "Valentine's 2026 is an interactive Three.js experience — a small, expressive playground for real-time 3D scenes and web motion, built to push the interactive and creative side of frontend development.",
+      "Valentine's 2026 is an interactive Three.js experience: a small, expressive playground for real-time 3D scenes and web motion, built to push the interactive and creative side of frontend development.",
     tech: ["Three.js", "WebGL", "JavaScript"],
     features: [
       "Real-time 3D scene rendering",
@@ -470,8 +403,67 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-export const FEATURED_PROJECTS = PROJECTS.filter((p) => p.featured);
-export const ADDITIONAL_PROJECTS = PROJECTS.filter((p) => !p.featured);
+
+/* -------------------------------------------------------------------------- */
+/*  Derived figures — the hero's numbers, computed from the data above         */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Single source for "what year is it" across the site, so the journey captions
+ * and the hero's experience figure can never drift apart.
+ */
+export const CURRENT_YEAR = 2026;
+
+/** Earliest year in the timeline — where the count of years building starts. */
+const FIRST_YEAR = Math.min(...JOURNEY.map((chapter) => Number(chapter.fullYear)));
+
+/**
+ * Years spent building, measured from the first chapter of the journey rather
+ * than typed in. Framed as "building", not "professional experience": the
+ * timeline documents an apprenticeship and freelance work from 2021, which
+ * supports the former and not the latter.
+ */
+export const YEARS_BUILDING = CURRENT_YEAR - FIRST_YEAR;
+
+/**
+ * Every distinct technology named by a project above, ordered by how many
+ * projects use it. Version suffixes are folded in ("Next.js 15" → "Next.js")
+ * so the same tool is not counted twice.
+ *
+ * Derived rather than hand-listed on purpose: the hero cannot advertise a
+ * technology unless a project in this file actually ships it, and the count
+ * cannot drift as projects are added or removed.
+ */
+export const PROJECT_TECHNOLOGIES: string[] = (() => {
+  const counts = new Map<string, { uses: number; firstSeen: number }>();
+
+  PROJECTS.forEach((project) => {
+    project.tech.forEach((raw) => {
+      // Drop a trailing major version: "React 19" and "React" are one tool.
+      const name = raw.replace(/\s+\d[\d.]*$/, "");
+      const entry = counts.get(name);
+      if (entry) entry.uses += 1;
+      else counts.set(name, { uses: 1, firstSeen: counts.size });
+    });
+  });
+
+  return [...counts.entries()]
+    .sort(
+      ([, a], [, b]) => b.uses - a.uses || a.firstSeen - b.firstSeen,
+    )
+    .map(([name]) => name);
+})();
+
+/**
+ * The three hero figures. Every value is computed, so none of them can be
+ * inflated by editing a string — change the projects or the journey and these
+ * follow.
+ */
+export const HERO_STATS: Stat[] = [
+  { value: PROJECTS.length, label: "Projects" },
+  { value: YEARS_BUILDING, suffix: "+", label: "Years Building" },
+  { value: PROJECT_TECHNOLOGIES.length, label: "Technologies" },
+];
 
 /* -------------------------------------------------------------------------- */
 /*  Education + certifications                                                 */
@@ -484,9 +476,9 @@ export const EDUCATION = {
 } as const;
 
 export const CERTIFICATIONS: Certification[] = [
-  { issuer: "Cisco", title: "Introduction to Networks", icon: LuNetwork },
+  { issuer: "Cisco", title: "Introduction to Networks", icon: SiCisco },
   { issuer: "Cisco", title: "Introduction to Cybersecurity", icon: SiCisco },
-  { issuer: "IBM", title: "Cybersecurity Fundamentals", icon: LuShieldCheck },
+  { issuer: "IBM", title: "Cybersecurity Fundamentals", monogram: "IBM" },
   { issuer: "Alibaba Cloud", title: "AI Journey", icon: SiAlibabacloud },
 ];
 
@@ -520,11 +512,26 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
 ];
 
-/** Tech badges credited in the footer. */
-export const BUILT_WITH: { name: string; icon: IconType }[] = [
-  { name: "Next.js", icon: SiNextdotjs },
-  { name: "Framer Motion", icon: SiFramer },
-  { name: "Vercel", icon: SiVercel },
+/**
+ * What this site itself runs on, for the ticker under the hero and the
+ * footer credit.
+ *
+ * Scoped to the portfolio's own stack rather than everything Mark works with:
+ * every entry here is a real dependency in package.json or the platform it is
+ * deployed on, so the strip is a statement about this build and not a list of
+ * logos. The wider toolkit is the Stack section's job.
+ *
+ * Resend is in the list because it is what actually delivers the contact form
+ * (see app/api/contact/route.ts), not as decoration.
+ */
+export const BUILT_WITH: { name: string; role: string; icon: IconType }[] = [
+  { name: "Next.js", role: "App Router & rendering", icon: SiNextdotjs },
+  { name: "React", role: "UI library", icon: SiReact },
+  { name: "TypeScript", role: "Type safety", icon: SiTypescript },
+  { name: "Tailwind CSS", role: "Styling system", icon: SiTailwindcss },
+  { name: "GSAP", role: "Scroll choreography", icon: SiGsap },
+  { name: "Node.js", role: "Server runtime", icon: SiNodedotjs },
+  { name: "Resend", role: "Contact delivery", icon: SiResend },
+  { name: "Vercel", role: "Hosting & CI", icon: SiVercel },
 ];
 
-export const EXTERNAL_LINK_ICON = FaArrowUpRightFromSquare;

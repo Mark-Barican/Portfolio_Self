@@ -17,9 +17,19 @@ export function Container({
   className,
   as: Tag = "div",
 }: ContainerProps) {
+  // `ElementType` is a union wide enough to include void elements like <br>,
+  // so TS can resolve `children` to `never`. Rendering through a div-typed
+  // alias keeps the runtime element while giving JSX a concrete prop shape.
+  const Component = Tag as "div";
+
   return (
-    <Tag className={cn("mx-auto w-full max-w-6xl px-5 sm:px-8", className)}>
+    <Component
+      className={cn(
+        "mx-auto w-full max-w-6xl px-5 sm:px-8 lg:max-w-[85rem]",
+        className,
+      )}
+    >
       {children}
-    </Tag>
+    </Component>
   );
 }

@@ -14,7 +14,7 @@ export const SITE = {
   location: "Quezon City, Philippines",
   email: "business.markbarican@gmail.com",
   description:
-    "Full-stack developer with 5+ years shipping production web apps with Next.js, React, TypeScript, Node.js and PostgreSQL — from e-commerce and 3D web to full-stack systems.",
+    "Full-stack developer with 5+ years shipping production web apps with Next.js, React, TypeScript, Node.js and PostgreSQL, from e-commerce and 3D web to full-stack systems.",
   keywords: [
     "Mark Barican",
     "Full-Stack Developer",
@@ -38,9 +38,10 @@ export const LINKS = {
 /** In-page navigation, also used for active-section detection. */
 export const NAV_SECTIONS = [
   { label: "Home", href: "#home", id: "home" },
-  { label: "Projects", href: "#projects", id: "projects" },
-  { label: "Experience", href: "#experience", id: "experience" },
-  { label: "Skills", href: "#skills", id: "skills" },
+  { label: "Journey", href: "#journey", id: "journey" },
+  { label: "Work", href: "#work", id: "work" },
+  { label: "Stack", href: "#stack", id: "stack" },
+  { label: "What You Get", href: "#capabilities", id: "capabilities" },
   { label: "About", href: "#about", id: "about" },
   { label: "Contact", href: "#contact", id: "contact" },
 ] as const;

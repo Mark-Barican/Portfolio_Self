@@ -1,22 +1,31 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 
-import { LoadingScreen } from "@/components/LoadingScreen";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { Noise } from "@/components/Noise";
 import { Cursor } from "@/components/Cursor";
-import { Menu } from "@/components/Menu";
-import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { ScrollScenes } from "@/components/ScrollScenes";
 import { LINKS, SITE } from "@/lib/constants";
+
+/**
+ * Archivo variable font with the width axis — the regular widths serve body
+ * copy while the expanded end powers the oversized display headlines.
+ */
+const archivo = Archivo({
+  subsets: ["latin"],
+  variable: "--font-archivo",
+  axes: ["wdth"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.shortName} — ${SITE.role}`,
-    template: `%s — ${SITE.shortName}`,
+    default: `${SITE.shortName} · ${SITE.role}`,
+    template: `%s · ${SITE.shortName}`,
   },
   description: SITE.description,
   keywords: [...SITE.keywords],
@@ -28,13 +37,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: SITE.locale,
     url: SITE.url,
-    siteName: `${SITE.shortName} — Portfolio`,
-    title: `${SITE.shortName} — ${SITE.role}`,
+    siteName: `${SITE.shortName} · Portfolio`,
+    title: `${SITE.shortName} · ${SITE.role}`,
     description: SITE.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.shortName} — ${SITE.role}`,
+    title: `${SITE.shortName} · ${SITE.role}`,
     description: SITE.description,
   },
   robots: {
@@ -51,8 +60,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
-  colorScheme: "dark",
+  /* The hero now opens on the ink surface, so the mobile browser chrome
+     should match the top of the page rather than the body's bone canvas. */
+  themeColor: "#111110",
+  colorScheme: "light",
   width: "device-width",
   initialScale: 1,
 };
@@ -87,7 +98,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={archivo.variable}>
       <body className="relative min-h-screen antialiased">
         <script
           type="application/ld+json"
@@ -95,15 +106,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
 
-        {/* Decorative, fixed background layers */}
-        <AnimatedBackground />
+        {/* Decorative, fixed grain layer */}
         <Noise />
 
         {/* Chrome */}
         <LoadingScreen />
         <ScrollProgress />
         <Cursor />
-        <Menu />
+        <Header />
+        <ScrollScenes />
 
         {/* Skip link for keyboard users */}
         <a
@@ -113,13 +124,13 @@ export default function RootLayout({
           Skip to content
         </a>
 
+        {/* The page ends inside `main`. The footer material used to be rendered
+            here as a separate ink block after it; it now lives in the Contact
+            section, which is the page's single final destination. See the note
+            in `components/sections/Contact.tsx`. */}
         <main id="content" className="relative z-10">
           {children}
         </main>
-
-        <div className="relative z-10">
-          <Footer />
-        </div>
       </body>
     </html>
   );

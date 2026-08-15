@@ -18,10 +18,8 @@ export function createOgImage() {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: 80,
-        background: "#000000",
-        backgroundImage:
-          "radial-gradient(60% 60% at 50% 0%, rgba(139,92,246,0.30), transparent 70%), radial-gradient(50% 50% at 100% 100%, rgba(37,99,235,0.45), transparent 70%)",
-        color: "#eaecf0",
+        background: "#d5cfbe",
+        color: "#0a0a0a",
         fontFamily: "sans-serif",
       }}
     >
@@ -31,7 +29,7 @@ export function createOgImage() {
           alignItems: "center",
           gap: 18,
           fontSize: 28,
-          color: "#8D9AA3",
+          color: "#555652",
         }}
       >
         <div
@@ -39,12 +37,13 @@ export function createOgImage() {
             display: "flex",
             width: 60,
             height: 60,
-            borderRadius: 14,
-            border: "1px solid rgba(255,255,255,0.12)",
+            borderRadius: 30,
+            border: "3px solid #0a0a0a",
+            background: "#ffff23",
             alignItems: "center",
             justifyContent: "center",
-            color: "#a78bfa",
-            fontWeight: 700,
+            color: "#0a0a0a",
+            fontWeight: 800,
             fontSize: 30,
           }}
         >
@@ -58,29 +57,50 @@ export function createOgImage() {
           style={{
             display: "flex",
             fontSize: 116,
-            fontWeight: 700,
+            fontWeight: 800,
             letterSpacing: -4,
             lineHeight: 1,
+            textTransform: "uppercase",
           }}
         >
           Mark Barican
         </div>
-        <div style={{ display: "flex", fontSize: 44, color: "#a78bfa" }}>
+        <div
+          style={{
+            display: "flex",
+            fontSize: 44,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: 2,
+          }}
+        >
           {SITE.role}
         </div>
         <div
           style={{
             display: "flex",
             fontSize: 28,
-            color: "#8D9AA3",
+            color: "#555652",
             maxWidth: 860,
           }}
         >
-          Building premium web experiences with modern technologies.
+          Building web experiences that look and work exactly how you imagined.
         </div>
       </div>
 
-      <div style={{ display: "flex", fontSize: 24, color: "#8D9AA3" }}>
+      <div
+        style={{
+          display: "flex",
+          alignSelf: "flex-start",
+          fontSize: 24,
+          color: "#0a0a0a",
+          background: "#ffff23",
+          border: "3px solid #0a0a0a",
+          borderRadius: 999,
+          padding: "12px 28px",
+          fontWeight: 700,
+        }}
+      >
         Next.js · React · TypeScript · Node.js · Three.js
       </div>
     </div>,

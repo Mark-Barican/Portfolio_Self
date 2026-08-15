@@ -99,7 +99,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "You've sent a few messages already — please give it a little while before sending another.",
+          "You've sent a few messages already. Please give it a little while before sending another.",
       },
       { status: 429 },
     );

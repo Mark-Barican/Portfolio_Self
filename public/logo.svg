@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="150" height="28" viewBox="0 0 150 28" fill="none">
-  <rect x="0" y="2" width="24" height="24" rx="7" fill="#8b5cf6"/>
-  <text x="12" y="19.5" font-family="'Geist','Inter',Arial,sans-serif" font-size="13" font-weight="700" fill="#000000" text-anchor="middle">MB</text>
-  <text x="34" y="19" font-family="'Geist','Inter',Arial,sans-serif" font-size="15" font-weight="600" fill="#EAECF0" letter-spacing="-0.2">Mark Barican</text>
+<svg width="250" height="160" viewBox="0 0 250 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M30 140V20H50V140H30Z" fill="black"/>
+<path d="M50 20L100 140H80L30 20H50Z" fill="black"/>
+<path d="M130 20L80 140H100L150 20H130Z" fill="black"/>
+<path d="M175 20C194.33 20 210 35.67 210 55C210 62.5669 207.598 69.5721 203.516 75.2969C213.414 81.4799 220 92.4696 220 105C220 124.33 204.33 140 185 140H120L128.343 120H185C193.284 120 200 113.284 200 105C200 96.7157 193.284 90 185 90H140.817L149.158 70H175C183.284 70 190 63.2843 190 55C190 46.7157 183.284 40 175 40H140V20H175Z" fill="black"/>
 </svg>
