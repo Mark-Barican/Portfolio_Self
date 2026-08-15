@@ -32,7 +32,7 @@ export const LINKS = {
   github: "https://github.com/Mark-Barican",
   linkedin: "https://linkedin.com/in/mark-barican",
   /** Drop the real PDF into /public to enable the download button. */
-  resume: "/Mark_Barican_Resume.pdf",
+  resume: "/Mark_Barican_Software_Web_Developer_Resume.pdf",
 } as const;
 
 /** In-page navigation, also used for active-section detection. */
