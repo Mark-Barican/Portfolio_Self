@@ -104,10 +104,18 @@ export function Hero() {
          * it sits in are both viewport-relative, so the ratio does not move. */
         desktop: () => scene(1, -45),
 
-        // Two thirds of the throw: the mobile hero is taller than the screen
-        // already. The surname is centred rather than cropped at this width, so
-        // it only drifts; -45% would carry most of it off the left edge.
-        handheld: () => scene(0.62, -10),
+        /* Two thirds of the throw, and **no horizontal shift at all**.
+         *
+         * The crop is a desktop device: there the surname is deliberately
+         * larger than its column and slides left so the reader discovers the
+         * rest of it. Below `lg` the word already fits the screen, so the same
+         * gesture has nothing to reveal — all -10% did was carry the leading
+         * "B" off the left edge and leave the word cut at both ends, which is
+         * a crop that reads as a layout fault rather than as an intention.
+         *
+         * At 0 the word stays centred for the whole exit and simply drifts
+         * vertically with the rest of the ground. */
+        handheld: () => scene(0.62, 0),
       });
     },
     sectionRef,

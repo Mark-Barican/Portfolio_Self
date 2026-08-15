@@ -169,6 +169,76 @@
     -webkit-user-select: text;
   }
 
+  /* ---------------------------------------------------------------------- */
+  /*  Autofilled fields.                                                     */
+  /*                                                                         */
+  /*  Chromium paints its own pale blue (#e8f0fe) behind any field it has     */
+  /*  autofilled, and sets the text to near-black. On this form — underlined  */
+  /*  fields with `bg-transparent` over an ink surface — that arrives as two  */
+  /*  white slabs with dark text sitting in the middle of a black section.     */
+  /*                                                                         */
+  /*  `background-color` cannot fix it: the UA style is applied at a level    */
+  /*  author rules do not reach, which is why the well-known workaround is an */
+  /*  enormous inset `box-shadow` instead. The shadow is painted *over* the   */
+  /*  UA background, so filling it with the surface colour behind the field   */
+  /*  restores the transparent look. `-webkit-text-fill-color` is the         */
+  /*  matching override for the text, since plain `color` is ignored too.      */
+  /*                                                                         */
+  /*  The absurd transition delay is the second half of the trick. Chromium   */
+  /*  re-applies its background on interaction, and a transition it can never */
+  /*  finish means the value never visibly changes.                           */
+  /*                                                                         */
+  /*  Per tone, because the two surfaces are different colours and the shadow */
+  /*  has to match whichever one the form is drawn on.                        */
+  /* ---------------------------------------------------------------------- */
+  [data-form-tone="dark"] :is(input, textarea):is(:-webkit-autofill, :-webkit-autofill:hover, :-webkit-autofill:focus, :-webkit-autofill:active) {
+    -webkit-text-fill-color: var(--color-cream);
+    caret-color: var(--color-cream);
+    -webkit-box-shadow: 0 0 0 1000px var(--color-ink-surface) inset;
+    box-shadow: 0 0 0 1000px var(--color-ink-surface) inset;
+    transition: background-color 100000s ease-in-out 0s;
+  }
+
+  [data-form-tone="light"] :is(input, textarea):is(:-webkit-autofill, :-webkit-autofill:hover, :-webkit-autofill:focus, :-webkit-autofill:active) {
+    -webkit-text-fill-color: var(--color-ink);
+    caret-color: var(--color-ink);
+    -webkit-box-shadow: 0 0 0 1000px var(--color-background) inset;
+    box-shadow: 0 0 0 1000px var(--color-background) inset;
+    transition: background-color 100000s ease-in-out 0s;
+  }
+
+  /* Firefox uses its own state and honours normal properties. */
+  input:autofill,
+  textarea:autofill {
+    background-color: transparent;
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /*  Selection inside the contact form.                                     */
+  /*                                                                         */
+  /*  The page sets `user-select: none` on `body` for the poster feel, and    */
+  /*  opts individual things back in. Fields were covered by the `input,      */
+  /*  textarea` rule above, but nothing else in the form was: a visitor could */
+  /*  not select the labels, the helper text, or drag across a field's label  */
+  /*  and value together. This is the one block on the site that exists to be */
+  /*  filled in and checked, so the whole of it is selectable.                */
+  /* ---------------------------------------------------------------------- */
+  [data-form-tone],
+  [data-form-tone] * {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  /* An autofilled field needs its selection colours restated.
+     `-webkit-text-fill-color` above wins over the `color` that `::selection`
+     would normally set, so without this the highlight paints the accent behind
+     text that is still cream — yellow on cream, which is unreadable. */
+  [data-form-tone] :is(input, textarea)::selection {
+    background-color: var(--color-accent);
+    color: #0a0a0a;
+    -webkit-text-fill-color: #0a0a0a;
+  }
+
   /* Opt back in, for the details a visitor needs to *take away*.
    *
    * The poster-feel `user-select: none` above is right for prose, but it also
@@ -337,27 +407,9 @@
     animation: underline-in 0.9s cubic-bezier(0.21, 0.47, 0.32, 0.98) 1.15s both;
   }
 
-  /* Hairline graph paper, faded out radially so it never reaches an edge and
-     announces itself. Pure gradients — no image request. */
-  .hero-grid {
-    background-image:
-      linear-gradient(
-        to right,
-        rgba(235, 234, 218, 0.055) 1px,
-        transparent 1px
-      ),
-      linear-gradient(
-        to bottom,
-        rgba(235, 234, 218, 0.055) 1px,
-        transparent 1px
-      );
-    background-size: 78px 78px;
-    mask-image: radial-gradient(
-      ellipse 85% 70% at 50% 42%,
-      black 0%,
-      transparent 100%
-    );
-  }
+  /* The hero's hairline graph paper used to live here as a pair of gradients.
+     It is now drawn on a canvas by `ConstellationGrid`, which the cursor can
+     push through, so the static version has no remaining consumer. */
 
   /* Capability row rule.
    *

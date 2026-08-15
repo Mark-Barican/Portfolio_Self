@@ -1,3 +1,5 @@
+import { ConstellationGrid } from "@/components/ui/constellation-grid";
+
 /**
  * The hero's three atmospheric layers, sitting under everything else.
  *
@@ -15,10 +17,18 @@
 export function HeroBackground() {
   return (
     <div aria-hidden className="layer-base absolute inset-0 overflow-clip">
-      {/* Grid — slowest, so it barely lags the page. */}
+      {/* Ground — an interactive mesh the cursor pushes through, and still the
+          slowest-moving layer so it barely lags the page.
+
+          It replaces the CSS `.hero-grid` gradient that used to sit here. The
+          canvas paints its own ink, so it is opaque: everything below in this
+          file (atmosphere, key light, vignette, closing edge) still layers over
+          it exactly as before. Kept inside the same `data-hero="grid"` and
+          `data-depth-*` wrappers, so the scrubbed exit timeline and the pointer
+          parallax continue to drive it without knowing what it is. */}
       <div data-hero="grid" className="absolute inset-0">
         <div data-depth-x="14" data-depth-y="10" className="absolute inset-0">
-          <div className="hero-grid absolute -inset-[8%]" />
+          <ConstellationGrid className="absolute inset-0" />
         </div>
       </div>
 

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 -25 210 210">
+  <title>Mark Barican</title>
+  <!--
+    Theme-aware favicon.
+
+    This is a static `.svg` rather than the generated PNG that used to live in
+    `app/icon.tsx`, and that swap is the entire mechanism. `ImageResponse`
+    rasterises at build time, so its output is one fixed set of pixels and can
+    never answer a question about the viewer's theme. An SVG favicon is parsed
+    by the browser, style rules inside it are live, and `prefers-color-scheme`
+    resolves against the browser/OS setting at paint time — including when the
+    reader switches theme with the tab already open.
+
+    The default is the ink fill, so any renderer that ignores the media query
+    (or strips the stylesheet) still gets the correct mark on a light tab strip
+    rather than an invisible one.
+
+    The viewBox is squared deliberately. The mark's own artwork is 250x160 and
+    its ink spans x 30..220, y 20..140 — a 190x120 box. Dropped into a favicon
+    slot at that ratio it would letterbox and render tiny. "20 -25 210 210"
+    crops to a 210 square centred on the artwork, leaving a 10 unit margin left
+    and right and 45 above and below, so the monogram fills the tab icon
+    instead of floating in it.
+  -->
+  <style>
+    path { fill: #0a0a0a; }
+    @media (prefers-color-scheme: dark) {
+      path { fill: #ebeada; }
+    }
+  </style>
+  <path d="M30 140V20H50V140H30Z" />
+  <path d="M50 20L100 140H80L30 20H50Z" />
+  <path d="M130 20L80 140H100L150 20H130Z" />
+  <path d="M175 20C194.33 20 210 35.67 210 55C210 62.5669 207.598 69.5721 203.516 75.2969C213.414 81.4799 220 92.4696 220 105C220 124.33 204.33 140 185 140H120L128.343 120H185C193.284 120 200 113.284 200 105C200 96.7157 193.284 90 185 90H140.817L149.158 70H175C183.284 70 190 63.2843 190 55C190 46.7157 183.284 40 175 40H140V20H175Z" />
+</svg>

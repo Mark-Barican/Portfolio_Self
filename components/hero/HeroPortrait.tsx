@@ -30,10 +30,18 @@ export function HeroPortrait() {
         className="layer-decoration absolute inset-0 flex items-center justify-center lg:justify-start"
       >
         <div data-depth-x="26" data-depth-y="16">
-          {/* Set to overflow its box on purpose: the word is cropped by the
-              section's `overflow-clip`, which is what stops it reading as a
-              label and lets it read as ground. */}
-          <span className="font-display text-outline-cream block text-[18vw] leading-none whitespace-nowrap opacity-35 lg:text-[15vw] lg:opacity-55">
+          {/* Two different jobs at two sizes.
+
+              From `lg` the word is deliberately wider than its column and is
+              cropped by the section's `overflow-clip`, which is what stops it
+              reading as a label and lets it read as ground.
+
+              Below `lg` it has to *fit*. "Barican" measures about 5.2em in this
+              face, so 16vw puts it at roughly 83% of the viewport — centred,
+              whole, with a real margin either side at every handheld width
+              (312px inside 375, 640px inside 768). 18vw left only 25px of
+              clearance at 768, which the exit's drift was enough to eat. */}
+          <span className="font-display text-outline-cream block text-[16vw] leading-none whitespace-nowrap opacity-35 lg:text-[15vw] lg:opacity-55">
             Barican
           </span>
         </div>

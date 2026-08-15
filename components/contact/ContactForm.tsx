@@ -154,7 +154,14 @@ export function ContactForm({ tone = "light" }: { tone?: Tone }) {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-8 text-left">
+      {/* `data-form-tone` is what the autofill rules in globals.css hang off:
+          the browser paints its own background over an autofilled field, and
+          overriding it needs to know which surface the field is sitting on. */}
+      <form
+        onSubmit={handleSubmit}
+        data-form-tone={tone}
+        className="flex flex-col gap-8 text-left"
+      >
         <div className="grid gap-8 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
             <label htmlFor="name" className={labelClasses}>
