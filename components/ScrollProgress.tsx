@@ -61,7 +61,20 @@ export function ScrollProgress() {
       ref={ref}
       aria-hidden
       className={cn(
-        "fixed inset-x-0 top-0 z-[60] h-[2px] origin-left scale-x-0 transition-colors duration-300",
+        /* Above the header, not below it.
+         *
+         * At z-60 this sat under the header's reading scrim (the header is
+         * z-80, and the scrim is one of its children), so the blur and wash
+         * meant to soften the page behind the nav were softening the progress
+         * bar as well — the one element up here that is supposed to stay a
+         * crisp hairline.
+         *
+         * 90 clears the header while staying under the overlay band at 100,
+         * which is where the modal, the mobile menu and the toast live. Those
+         * still cover it, which is correct: reading progress is irrelevant
+         * while a dialog is open. It is 2px tall against the header's 16px of
+         * top padding, so sitting above the nav costs it no legibility. */
+        "fixed inset-x-0 top-0 z-[90] h-[2px] origin-left scale-x-0 transition-colors duration-300",
         overDark ? "bg-cream" : "bg-ink",
       )}
     />
