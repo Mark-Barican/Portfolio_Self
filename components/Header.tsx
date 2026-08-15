@@ -106,7 +106,47 @@ export function Header() {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-[80]">
-        <div className="mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-5 py-4 sm:px-8">
+        {/* ------------------------------------------------------------ */}
+        {/*  Reading scrim.                                               */}
+        {/*                                                               */}
+        {/*  The centre pill carries its own `bg-card/85` and reads fine   */}
+        {/*  over anything. The wordmark and the "Let's Talk" link do not: */}
+        {/*  they sit directly on the page, and over the Journey cards or  */}
+        {/*  a project title they land on top of body copy at a similar    */}
+        {/*  weight, which is the collision in the screenshot.             */}
+        {/*                                                               */}
+        {/*  A blur alone softens what is behind but barely changes its    */}
+        {/*  contrast, so it is paired with a very light wash of whichever */}
+        {/*  surface the header is currently over — the same `light` flag  */}
+        {/*  that already decides the wordmark's colour, so the scrim can  */}
+        {/*  never be the wrong tone for the section under it.             */}
+        {/*                                                               */}
+        {/*  Masked to nothing by its own foot. Without the fade the band  */}
+        {/*  ends on a hard horizontal line across the page, which is far  */}
+        {/*  more noticeable than the blur it is hiding — most of the      */}
+        {/*  element's height is spent disappearing.                        */}
+        {/*                                                               */}
+        {/*  `pointer-events-none` is load-bearing beyond not swallowing   */}
+        {/*  clicks: `isDarkSurfaceAt` hit-tests this exact strip to decide */}
+        {/*  the header's own colour, and a scrim it could see would be    */}
+        {/*  the answer every time. Being inert keeps it invisible to the  */}
+        {/*  probe, so the theme still resolves against the real section.  */}
+        {/* ------------------------------------------------------------ */}
+        <div
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute inset-x-0 top-0 h-[6.5rem] backdrop-blur-[6px] transition-colors duration-300",
+            light ? "bg-ink-surface/25" : "bg-background/25",
+          )}
+          style={{
+            maskImage:
+              "linear-gradient(to bottom, black 0%, black 45%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, black 0%, black 45%, transparent 100%)",
+          }}
+        />
+
+        <div className="relative mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <a
             href="#home"
             className={cn(
