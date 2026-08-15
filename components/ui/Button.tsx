@@ -39,7 +39,7 @@ type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 /**
  * Polymorphic pill button. Renders an `<a>` when `href` is provided, otherwise
- * a `<button>`. Pure styling — wrap with `<Magnetic>` for the hover pull.
+ * a `<button>`. Pure styling: wrap with `<Magnetic>` for the hover pull.
  */
 export function Button(props: ButtonProps) {
   const { variant = "primary", size = "md", className, children } = props;

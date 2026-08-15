@@ -33,7 +33,7 @@ export function StackChoreography({ children }: { children: ReactNode }) {
        * meant the page's only pin was also the only scene not reading its
        * numbers from `lib/scroll.ts`. `scrubbed` supplies the same
        * `anticipatePin` and `invalidateOnRefresh` this had spelled out, and
-       * `MEDIA.desktop` is the same query, so the behaviour is unchanged —
+       * `MEDIA.desktop` is the same query, so the behaviour is unchanged,
        * it is now re-pacing from the same file as everything else, and the
        * trigger has an id so it can be found in a ScrollTrigger dump. */
       perViewport({

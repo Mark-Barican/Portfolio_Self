@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * A single floating mark. Cream card, ink rule, logo over the name, exactly the
- * object the old WebGL flythrough was rasterising onto a texture — except this
+ * object the old WebGL flythrough was rasterising onto a texture: except this
  * one is real DOM, so it is selectable, searchable, and costs nothing to draw.
  */
 function TechCard({

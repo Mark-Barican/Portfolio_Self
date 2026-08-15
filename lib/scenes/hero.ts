@@ -4,37 +4,16 @@ import { gsap } from "@/lib/gsap";
 import { EASE } from "@/lib/scroll";
 
 /**
- * The hero's exit choreography — one timeline, normalised to a 0→1 duration so
- * the numbers below read as a storyboard rather than as seconds.
+ * The hero's exit choreography, normalised to a 0→1 duration so the positions
+ * below read as a storyboard.
  *
- * It is sequenced, not simultaneous, and the order is the entire point:
+ * Sequenced, not simultaneous: the reading layer leaves and the ground drifts,
+ * BARICAN arrives in the space the copy vacated and holds, then the cream comes
+ * up behind it. Phase 3 deliberately overlaps the name's exit and runs to 1.
+ * Running the phases strictly end to end left empty frames to scroll through.
  *
- *   Phase 1   the reading layer leaves, and the ground starts to drift
- *   Phase 2   BARICAN arrives in the space the copy vacated, holds long enough
- *             to be read, then leaves
- *   Phase 3   the cream comes up behind it and runs to the end of the pin
- *
- * **There is no dead air, and that is a deliberate correction.** An earlier
- * cut of this ran the three phases strictly end to end and held a settled
- * cream tail after them. Played back, that produced two entirely empty frames:
- * one of bare dark ground after the figure and the name had both gone but
- * before the wash started, and one of blank cream while the tail ran out. The
- * reader was scrolling through nothing, twice.
- *
- * So Phase 3 now starts *while* the name is still on its way out — a short
- * overlap, not a cross-fade — and the wash runs all the way to 1 rather than
- * finishing early. The sequence still reads as "the name goes, then the
- * surface turns", because the name is already most of the way gone when the
- * cream begins; there is simply never a frame with nothing in it.
- *
- * The wash ending exactly at 1 is what lets the pin release straight into the
- * next section with no held tail. See `Hero` for the pin length that pairs
- * with this.
- *
- * @param depth  scales the throw. 1 on desktop; less on handhelds, where the
- *               same distances would push content off a shorter screen.
- * @param shift  the surname's travel as a percentage of its own width, which is
- *               what decides how much of the cropped name comes into view.
+ * @param depth  scales the throw. 1 on desktop, less on handhelds.
+ * @param shift  the surname's travel as a percentage of its own width.
  */
 export function heroExit(depth: number, shift: number): gsap.core.Timeline {
   const tl = gsap.timeline();
@@ -96,7 +75,7 @@ export function heroExit(depth: number, shift: number): gsap.core.Timeline {
     /* The figure leaves *before* the name arrives, not alongside it.
      *
      * It used to start at 0.26 and run for 0.32, so it was not clear until
-     * 0.58 — while the surname finishes travelling into place at 0.40. For
+     * 0.58, while the surname finishes travelling into place at 0.40. For
      * those eighteen hundredths the name is centred behind a portrait that is
      * still most of the way opaque, which is exactly when it is supposed to be
      * the only thing on screen. The reader never gets a clean look at it.

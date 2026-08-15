@@ -22,7 +22,7 @@ export function HeroPortrait() {
   return (
     <div className="pointer-events-none relative flex flex-col items-center lg:absolute lg:inset-y-0 lg:right-0 lg:w-[52%]">
       {/* ------------------------------------------------------------------ */}
-      {/*  Backdrop — the surname, oversized, cropped by the section edge.    */}
+      {/*  Backdrop: the surname, oversized, cropped by the section edge.    */}
       {/* ------------------------------------------------------------------ */}
       <div
         aria-hidden
@@ -37,7 +37,7 @@ export function HeroPortrait() {
               reading as a label and lets it read as ground.
 
               Below `lg` it has to *fit*. "Barican" measures about 5.2em in this
-              face, so 16vw puts it at roughly 83% of the viewport — centred,
+              face, so 16vw puts it at roughly 83% of the viewport: centred,
               whole, with a real margin either side at every handheld width
               (312px inside 375, 640px inside 768). 18vw left only 25px of
               clearance at 768, which the exit's drift was enough to eat. */}

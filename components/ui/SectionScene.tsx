@@ -17,39 +17,14 @@ interface SectionSceneProps {
 }
 
 /**
- * Carries a section's content in as it arrives and out as it leaves.
+ * Carries a section's content in as it arrives and out as it leaves, so the
+ * opaque sections do not butt together as hard seams.
  *
- * **This replaces the page's hard section seams.** Every section paints its own
- * opaque surface and they butt directly against one another, so scrolling used
- * to present each one as a sudden edge: content was at full strength the
- * instant its section entered the viewport and stayed there until the boundary
- * went past, which is what read as a line break between blocks rather than as
- * one continuous piece.
- *
- * The order is the point, and it matches the hero's hand-off:
- *
- *   1. the content leaves first, lifting and fading
- *   2. the surface changes underneath it, once there is nothing on top
- *   3. the next section's content arrives on the new surface
- *
- * Doing it the other way round — changing colour under live copy — is what
- * makes a transition read as a glitch, because for a few frames text sits on a
- * surface it was never coloured for.
- *
- * **One trigger, one timeline, three phases.** The obvious construction is two
- * separate `fromTo`s, one for the entrance and one for the exit, and it does
- * not work: both own `opacity` on the same element, and the exit's `from`
- * state renders immediately and overwrites whatever the entrance had reached.
- * A single timeline spanning the section's whole passage cannot fight itself.
- *
- * The proportions are deliberate. The travel is the section's height plus one
- * viewport, and the middle 64% of it is a hold where nothing is tweened at all,
- * so a section is at full strength for the entire time it is actually being
- * read. Only the first and last ~18% carry the motion, which is the part the
- * reader spends crossing a boundary.
- *
- * `ease: "none"` throughout: the scrub is already the easing, and anything else
- * eases twice and reads as lag.
+ * One trigger and one timeline: two separate `fromTo`s would both own
+ * `opacity` on the same element and the exit's start state would overwrite the
+ * entrance. The middle 64% is a hold, so a section is at full strength for the
+ * whole time it is being read. `ease: "none"` throughout, since the scrub is
+ * already the easing.
  */
 export function SectionScene({
   children,

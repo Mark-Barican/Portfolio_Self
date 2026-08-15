@@ -143,7 +143,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
    * **A `z-index` only ranks a box against its siblings in the same stacking
    * context, and this dialog was born inside two of them.** `main#content` is
    * `position: relative; z-index: 10`, and `section#work` is `isolate`. So the
-   * `z-[90]` below was never competing with the header at all — it ranked the
+   * `z-[90]` below was never competing with the header at all: it ranked the
    * panel *within* the work section, which ranks within `main`'s single z-10
    * layer, and the header is a sibling of `main` at z-80. 80 beats 10, so the
    * navigation painted straight over an open case study every time, which is
@@ -211,7 +211,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   {p.overview}
                 </p>
 
-                {/* Gallery — real screenshots (omitted for single-image projects) */}
+                {/* Gallery: real screenshots (omitted for single-image projects) */}
                 {p.gallery && p.gallery.length > 0 && (
                   <div
                     className={cn(

@@ -9,7 +9,7 @@ import { useGsap } from "@/hooks/useGsap";
  * travelling up from its foot, and the two drawn corner marks are then drawn on
  * afterwards, each growing out from its own corner.
  *
- * Distinct from every other section on purpose — the work index wipes in from
+ * Distinct from every other section on purpose: the work index wipes in from
  * the left, the journey cards are dealt from the right, the stack clusters pop,
  * the capability rules draw across. This one develops like a print.
  *

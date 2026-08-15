@@ -11,7 +11,7 @@ import { ScrollScenes } from "@/components/ScrollScenes";
 import { LINKS, SITE } from "@/lib/constants";
 
 /**
- * Archivo variable font with the width axis — the regular widths serve body
+ * Archivo variable font with the width axis: the regular widths serve body
  * copy while the expanded end powers the oversized display headlines.
  */
 const archivo = Archivo({

@@ -17,7 +17,7 @@ import { ConstellationGrid } from "@/components/ui/constellation-grid";
 export function HeroBackground() {
   return (
     <div aria-hidden className="layer-base absolute inset-0 overflow-clip">
-      {/* Ground — an interactive mesh the cursor pushes through, and still the
+      {/* Ground: an interactive mesh the cursor pushes through, and still the
           slowest-moving layer so it barely lags the page.
 
           It replaces the CSS `.hero-grid` gradient that used to sit here. The
@@ -63,7 +63,7 @@ export function HeroBackground() {
         </div>
       </div>
 
-      {/* Vignette — deliberately static. With every other layer drifting, one
+      {/* Vignette: deliberately static. With every other layer drifting, one
           fixed element is what the eye reads the movement against. */}
       <div
         className="absolute inset-0"

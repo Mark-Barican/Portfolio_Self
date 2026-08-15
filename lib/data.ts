@@ -33,7 +33,7 @@ import type {
 import { LINKS, SITE } from "@/lib/constants";
 
 /* -------------------------------------------------------------------------- */
-/*  About — summary + headline stats                                          */
+/*  About: summary + headline stats                                          */
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -56,7 +56,7 @@ export const STATS: Stat[] = [
 
 
 /* -------------------------------------------------------------------------- */
-/*  Journey — the story timeline, built from the experience above             */
+/*  Journey: the story timeline, built from the experience above             */
 /* -------------------------------------------------------------------------- */
 
 export const JOURNEY: JourneyItem[] = [
@@ -113,7 +113,7 @@ export const JOURNEY: JourneyItem[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  Capabilities — the "What You Get" rows (condensed from the skills)        */
+/*  Capabilities: the "What You Get" rows (condensed from the skills)        */
 /* -------------------------------------------------------------------------- */
 
 export const CAPABILITIES: Capability[] = [
@@ -150,7 +150,7 @@ export const CAPABILITIES: Capability[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  Projects — featured + additional                                          */
+/*  Projects: featured + additional                                          */
 /* -------------------------------------------------------------------------- */
 
 export const PROJECTS: Project[] = [
@@ -405,7 +405,7 @@ export const PROJECTS: Project[] = [
 
 
 /* -------------------------------------------------------------------------- */
-/*  Derived figures — the hero's numbers, computed from the data above         */
+/*  Derived figures: the hero's numbers, computed from the data above         */
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -414,7 +414,7 @@ export const PROJECTS: Project[] = [
  */
 export const CURRENT_YEAR = 2026;
 
-/** Earliest year in the timeline — where the count of years building starts. */
+/** Earliest year in the timeline: where the count of years building starts. */
 const FIRST_YEAR = Math.min(...JOURNEY.map((chapter) => Number(chapter.fullYear)));
 
 /**
@@ -456,7 +456,7 @@ export const PROJECT_TECHNOLOGIES: string[] = (() => {
 
 /**
  * The three hero figures. Every value is computed, so none of them can be
- * inflated by editing a string — change the projects or the journey and these
+ * inflated by editing a string: change the projects or the journey and these
  * follow.
  */
 export const HERO_STATS: Stat[] = [

@@ -24,31 +24,14 @@ const MAX_GLIDE = 1.1;
 /**
  * Adds click-and-drag panning, with inertia, to a natively scrolling element.
  *
- * The element does the scrolling; this only translates a held mouse into
- * `scrollLeft`. That matters — a transform-based carousel keeps its own idea of
- * the position, which then disagrees with the scroll the browser performs when
- * something inside takes focus. Here there is one source of truth, so focus,
- * keyboard, touch momentum and the drag gesture can never fall out of sync.
+ * The element keeps doing the scrolling; this only translates a held mouse into
+ * `scrollLeft`, so focus, keyboard and touch momentum share one source of truth.
  *
- * Mouse only. Touch and pen already pan natively with real momentum, and
- * hijacking them would replace a good native gesture with a worse synthetic
- * one — and, on a horizontal track inside a vertically scrolling page, would
- * risk swallowing the vertical scroll. Leaving touch alone is what keeps the
- * page scrollable through the timeline on a phone.
- *
- * The inertia is the one synthetic part, and it exists because a mouse has no
- * equivalent: releasing a held drag on a real surface keeps moving, and without
- * this the track stops dead the instant the button comes up. Velocity is
- * sampled from the last few milliseconds of the gesture rather than averaged
- * across it, so a flick that ends fast throws far and a drag that is eased to a
- * halt before release does not throw at all.
- *
- * Boundaries need no clamping of their own: the target is clamped to the
- * track's own scroll range before the glide starts, so nothing can be thrown
- * past either end.
- *
- * A gesture that moved is swallowed on the way back up, so releasing a drag
- * over a card does not also open it.
+ * Mouse only: touch and pen already pan natively, and hijacking them on a
+ * horizontal track inside a vertically scrolling page risks swallowing the page
+ * scroll. Velocity is sampled from the last few milliseconds rather than
+ * averaged, so a fast flick throws and an eased stop does not. A gesture that
+ * moved is swallowed on the way up, so releasing over a card does not open it.
  */
 export function useDragScroll<T extends HTMLElement>() {
   const ref = useRef<T>(null);

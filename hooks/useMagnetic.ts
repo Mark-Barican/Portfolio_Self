@@ -16,7 +16,7 @@ const PULL = 6;
  * so a row of eight social buttons costs two listeners rather than sixteen, and
  * adding another button costs nothing.
  *
- * The lean is intentionally small — six pixels, which is felt rather than seen.
+ * The lean is intentionally small: six pixels, which is felt rather than seen.
  * The point is that a control acknowledges the pointer before it is clicked,
  * not that it chases it around; anything larger reads as a toy and starts
  * fighting the element's own hover treatment for attention.
@@ -25,8 +25,8 @@ const PULL = 6;
  * `quickTo` reuses one tween instead of allocating a new one per event, and
  * nothing here touches React state, so a magnetic hover never renders.
  *
- * Desktop pointers only. A touch device has no hover to lean into — the first
- * contact is already the tap — and reduced-motion visitors opt out entirely.
+ * Desktop pointers only. A touch device has no hover to lean into: the first
+ * contact is already the tap, and reduced-motion visitors opt out entirely.
  */
 export function useMagnetic(scope: RefObject<HTMLElement | null>) {
   useEffect(() => {

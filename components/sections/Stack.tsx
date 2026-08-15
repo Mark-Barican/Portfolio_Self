@@ -6,7 +6,7 @@ import { StackStage } from "@/components/sections/StackStage";
 import { StackClusters } from "@/components/sections/StackClusters";
 
 /**
- * The Stack — the full toolkit on the ink surface, in two halves that do
+ * The Stack: the full toolkit on the ink surface, in two halves that do
  * different jobs.
  *
  * `StackStage` is the floating card composition: cream cards at three depths,
@@ -42,7 +42,7 @@ export function Stack() {
       className="relative isolate overflow-x-clip bg-ink-surface py-16 sm:py-20"
     >
       {/* Carries the work index's cream over this section's top edge, then
-          wipes it away. Opaque, so the boundary is never a blend — see the
+          wipes it away. Opaque, so the boundary is never a blend: see the
           note in `SurfaceEdge` about why a cross-fade produced the grey slab
           that used to appear under Valentine's 2026. */}
       <SurfaceEdge from="cream" depth={70} />

@@ -18,7 +18,7 @@ import {
 import { SITE } from "@/lib/constants";
 
 /**
- * Behind the Work — the person, as a layered composition rather than a photo
+ * Behind the Work: the person, as a layered composition rather than a photo
  * beside a paragraph.
  *
  * The figure runs the full height of a five-column slot and is deliberately

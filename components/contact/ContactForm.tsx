@@ -17,8 +17,8 @@ type Status = "idle" | "submitting" | "error";
  *
  * The form now closes the page on ink rather than sitting mid-page on cream,
  * and every one of its resting colours was picked against bone. Rather than
- * dropping opacity on a wrapper — which would take the placeholder text below
- * a readable contrast ratio along with everything else — each tone names its
+ * dropping opacity on a wrapper, which would take the placeholder text below
+ * a readable contrast ratio along with everything else: each tone names its
  * own values, so both are legible on their own ground.
  */
 type Tone = "light" | "dark";

@@ -11,7 +11,7 @@ import { EASE, SCRUB, scrubbed } from "@/lib/scroll";
 import { useGsap } from "@/hooks/useGsap";
 
 /**
- * What You Get — the five capabilities as editorial statements on ink.
+ * What You Get: the five capabilities as editorial statements on ink.
  *
  * No icons, no cards, no tag pills: a number, a title at display size, one
  * sentence, and the tools set as a single hairline-separated line. Typography
@@ -27,14 +27,14 @@ import { useGsap } from "@/hooks/useGsap";
  *  - **Prominence** is a class, not a tween. While a row occupies the reading
  *    band its number and tool line come up to full strength and the row lifts
  *    a few pixels; leaving the band settles it back. Driven by `toggleClass`
- *    rather than a scrubbed tween because it only changes twice per row —
+ *    rather than a scrubbed tween because it only changes twice per row,
  *    running five scrubbed opacity tweens per frame to express a boolean would
  *    be work for nothing, and CSS transitions the change for free.
  *
  * There is no longer a layer of oversized type behind the rows. It used to
  * cross-fade the current capability's title in at 13vw as ground, and what
  * reached the screen was "FULL-STACK" and "AI-ACCELER" cut off mid-word and
- * drawn straight through the rows they were naming — the copy had to be read
+ * drawn straight through the rows they were naming: the copy had to be read
  * *through* its own title. The rows are the design; they do not need a
  * restatement of themselves behind them. The section's identity now sits in the
  * gutter marginal instead.
@@ -125,19 +125,10 @@ export function WhatYouGet() {
               className="cap-row relative py-6"
             >
               <div className="min-w-0">
-                {/* The title is the hover surface, and `TextReveal` gives it
-                    0.4em of horizontal padding so the cascade has room. That
-                    padding must be cancelled or the heading sits indented
-                    against the copy beneath it.
-
-                    The cancelling margin belongs on the title, not on a
-                    wrapper. `em` resolves against the element's *own*
-                    font-size, and the wrapper inherits body size while the
-                    title is set at `min(6vw, 3.6rem)` — so the same `-0.4em`
-                    written on the wrapper pulled 29px where the padding it was
-                    meant to cancel is 23px, leaving the heading hanging 6px
-                    left of its own description. On the title the two values are
-                    computed from one font-size and cancel exactly. */}
+                {/* Cancels `TextReveal`'s own 0.4em padding so the title lines
+                    up with the copy. The margin must sit on the title, not a
+                    wrapper: `em` resolves against the element's own font-size,
+                    and a wrapper inherits body size instead. */}
                 <div data-cap-part>
                   <TextReveal
                     as="h3"

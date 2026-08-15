@@ -15,7 +15,7 @@ interface SectionHeadingProps {
    *
    * Defaults to true, which wraps it in the page's standard `Reveal`. Pass
    * `false` when the surrounding section runs a scroll-linked scene that
-   * already animates this heading — two systems writing `opacity` and `y` on
+   * already animates this heading: two systems writing `opacity` and `y` on
    * the same element fight, and the losing one leaves it stranded part-way.
    */
   reveal?: boolean;

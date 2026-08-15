@@ -25,7 +25,7 @@ const HEADER_OFFSET = 0;
  *
  * Rendered on the server rather than mounted from an effect, so a refresh
  * shows it in the very first paint instead of flashing the page first. Because
- * of that the wipe is a CSS animation, not JS — the overlay has to clear
+ * of that the wipe is a CSS animation, not JS: the overlay has to clear
  * itself even if the bundle never executes. React only drives the number and
  * then unmounts the (already off-screen) panel.
  */

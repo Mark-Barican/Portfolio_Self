@@ -33,7 +33,7 @@ const useIsomorphicLayoutEffect =
  *
  * Reduced motion is handled by not running at all. Every component here is
  * written so its CSS already describes the finished state and GSAP only
- * animates *from* a start state — so skipping setup leaves content correctly
+ * animates *from* a start state, so skipping setup leaves content correctly
  * visible and in place, rather than stranded at opacity 0.
  */
 export function useGsap(

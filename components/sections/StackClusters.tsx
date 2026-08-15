@@ -12,7 +12,7 @@ import { TECH_MARKS } from "@/lib/techMarks";
  *
  * Deliberately a plain, aligned two-column list. The previous version scattered
  * these across a twelve-column grid on staggered top margins, each drifting at
- * its own scroll speed — which turned six readable groups into a ragged pile
+ * its own scroll speed, which turned six readable groups into a ragged pile
  * with no reading order. Alignment is what fixes it: equal columns, a shared
  * baseline per row, one rule per cluster.
  *
@@ -21,9 +21,9 @@ import { TECH_MARKS } from "@/lib/techMarks";
  * clusters sitting side by side share a top edge, so they fired *together*.
  * Half the list arrived in three simultaneous pairs rather than in the order it
  * reads. Driving all six from a single scrubbed timeline over the whole grid
- * fixes the ordering — each cluster owns a slice of the section's travel, so
+ * fixes the ordering: each cluster owns a slice of the section's travel, so
  * they arrive strictly one after another, in reading order, at a rate the
- * reader controls — and costs one trigger instead of six.
+ * reader controls, and costs one trigger instead of six.
  *
  * Within a cluster the heading leads and its marks pop in behind it on a fast
  * stagger, which is what keeps this section's motion distinct from the wipes in

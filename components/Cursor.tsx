@@ -16,7 +16,7 @@ const RING = 28;
  *
  * `hover` is deliberately held under 2×. The ring's job over a link is to
  * acknowledge it, while the link's own sweep (see the link interaction system
- * in globals.css) is what actually does the highlighting — so a ring that grew
+ * in globals.css) is what actually does the highlighting, so a ring that grew
  * much past this would be covering the very thing it is pointing at. The badge
  * modes are larger because they have to fit a word inside them.
  */

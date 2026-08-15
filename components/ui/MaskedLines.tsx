@@ -23,7 +23,7 @@ interface MaskedLinesProps {
  * words, let the browser wrap them naturally, then group the words into lines
  * by comparing their `offsetTop`, and give each resulting line an
  * `overflow: hidden` mask to slide out from. Grouping after layout is what
- * makes it survive re-wrapping — the lines are whatever the browser actually
+ * makes it survive re-wrapping: the lines are whatever the browser actually
  * produced at this width, not a guess baked in at author time.
  *
  * Two things differ from the original. It runs on GSAP rather than a second

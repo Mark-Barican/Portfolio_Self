@@ -13,7 +13,7 @@ import { useGsap } from "@/hooks/useGsap";
  * server-rendered inside `children`.
  *
  * The title arrives *after* the surface has changed under it, not with it. That
- * ordering is the whole point of this boundary — the cream has to finish and
+ * ordering is the whole point of this boundary: the cream has to finish and
  * the ink has to establish before the new chapter's name appears, or the two
  * events blur into one and the section change stops registering. The wash above
  * is consumed by `top 25%`; this starts at `top 55%`, so the type is arriving

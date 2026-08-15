@@ -10,7 +10,7 @@ interface LogoProps {
 }
 
 /**
- * The Barican monogram, inlined so it can inherit `currentColor` — that is what
+ * The Barican monogram, inlined so it can inherit `currentColor`, that is what
  * lets the header flip it between ink and cream over light and dark sections.
  * Size it with a height utility (`h-8 w-auto`); the viewBox handles the rest.
  */

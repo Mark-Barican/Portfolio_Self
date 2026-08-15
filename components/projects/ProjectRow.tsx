@@ -43,7 +43,7 @@ export function ProjectRow({
    * Scrubbed against each row's own approach rather than fired on entry, which
    * is what ties the list to the scroll instead of to a timer. The range is
    * short and finishes well above centre, so a row is fully set by the time it
-   * is in reading position — a scrub that ran to the middle of the viewport
+   * is in reading position: a scrub that ran to the middle of the viewport
    * would leave the reader looking at a half-drawn row.
    *
    * The variation is in the axis, not in the idea. Every row wipes behind a
@@ -127,7 +127,7 @@ export function ProjectRow({
           </span>
 
           {/* Stack, as one hairline-separated line rather than a row of tags.
-              The category no longer appears here — it has moved up into the
+              The category no longer appears here: it has moved up into the
               classification above the title, so this line is purely the
               technical detail. Held back at rest and brought up on hover,
               which is the row "gaining depth" without moving anything. */}

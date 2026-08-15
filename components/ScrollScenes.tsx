@@ -15,7 +15,7 @@ import { refreshWhenSettled } from "@/lib/scroll";
  * Both land *after* the ScrollTriggers measured the page, which leaves every
  * start and end pointing at a scroll offset that has since moved. That is the
  * usual cause of a scene that fires visibly early or late on a cold load but is
- * perfectly placed again after a resize — the resize is what triggers the
+ * perfectly placed again after a resize: the resize is what triggers the
  * refresh that should have happened at load.
  *
  * Mounted once from the root layout, so this costs one listener for the whole

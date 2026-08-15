@@ -109,7 +109,7 @@ const TextReveal = React.memo(function TextReveal({
       /* Only ever write a colour when there is one to write.
        *
        * The original always emitted `color`, which meant the default of
-       * "inherit" went out as an inline declaration — and an inline
+       * "inherit" went out as an inline declaration, and an inline
        * `color: inherit` beats any class. A caller styling this with
        * `text-cream` got near-black inherited from <body> instead, which on an
        * ink section is invisible. Omitting it lets the class through; hover

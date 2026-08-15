@@ -68,7 +68,7 @@ export interface Certification {
   title: string;
   /**
    * Issuer brand mark. Optional because react-icons does not carry every
-   * company logo — Simple Icons has dropped some (IBM among them) over
+   * company logo: Simple Icons has dropped some (IBM among them) over
    * trademark policy. Issuers without one use `monogram` in the same tile.
    */
   icon?: IconType;

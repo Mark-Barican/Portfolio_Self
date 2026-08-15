@@ -18,7 +18,7 @@ interface SurfaceEdgeProps {
   /**
    * How far the previous surface is carried into this section, in svh.
    *
-   * Bigger reads as more of a chapter break. It costs nothing extra — the band
+   * Bigger reads as more of a chapter break. It costs nothing extra: the band
    * is opaque, so its height changes how long the surface persists, not how
    * much blending happens.
    */
@@ -29,39 +29,14 @@ interface SurfaceEdgeProps {
  * Carries the previous section's surface over the top of this one, then wipes
  * it away as the boundary crosses the viewport.
  *
- * **This is a wipe, not a cross-fade, and that is the whole point.**
+ * A wipe, not a cross-fade: cream at partial alpha over ink resolves through
+ * olive-grey, so every intermediate frame of a fade is mud. The band is opaque
+ * and scaled away from its top edge, so each pixel is wholly one surface or the
+ * other. A short feather on its bottom edge softens the travelling line.
  *
- * It used to fade a translucent band of the previous colour from opacity 1 to
- * 0. That is the obvious way to do it and it cannot be made to work here,
- * because of what the two colours are: bone (#d5cfbe) at partial alpha over
- * ink (#111110) resolves through olive-grey. Every intermediate frame of a
- * cream↔ink cross-fade is mud. At a 160px band that reads as a slightly dirty
- * seam; carried over most of a screen it becomes the grey-olive slab that used
- * to sit under the last of the work index while Valentine's 2026 was still on
- * screen, which is what made the Stack look like it was arriving early.
- *
- * So the band here is **fully opaque** and is removed by scaling it away from
- * its top edge. At every frame each pixel is either wholly the old surface or
- * wholly the new one, and the line between them travels up the screen. There
- * is no blend, so there is no grey — at any band height.
- *
- * A short feather is masked onto the band's bottom edge so the travelling line
- * is soft rather than a hard rule. It is a fraction of the band, not a gradient
- * across the whole of it, so it never covers enough area to read as a colour in
- * its own right.
- *
- * Always the top edge of the arriving section, never the bottom of the leaving
- * one. Painting the next colour at the bottom of a section runs the blend
- * backwards: it would show the new surface first and then reveal the old one
- * underneath as you scrolled toward it.
- *
- * Rests at `scaleY(0)` — invisible — so that a visitor whose scenes never run
- * (reduced motion, or a failed bundle) gets a correct hard boundary between two
- * properly painted sections rather than a slab of the wrong colour parked over
- * this one's heading.
- *
- * Inert throughout: `pointer-events: none` via `.layer-decoration`, and
- * `aria-hidden` because it is a colour, not content.
+ * Always on the arriving section's top edge, never the leaving one's bottom,
+ * or the blend runs backwards. Rests at `scaleY(0)`, so a visitor whose scenes
+ * never run gets a correct hard boundary rather than a misplaced slab.
  */
 export function SurfaceEdge({ from, depth = 55 }: SurfaceEdgeProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -99,30 +74,15 @@ export function SurfaceEdge({ from, depth = 55 }: SurfaceEdgeProps) {
       aria-hidden
       /* Declares the surface this band paints, so fixed chrome can colour
          itself against it. `.layer-decoration` sets `pointer-events: none`,
-         which makes the band invisible to `elementsFromPoint` — the probe
+         which makes the band invisible to `elementsFromPoint`: the probe
          reads it by geometry instead. Its scaled rect shrinks with the wipe,
          so the hand-over lands exactly where the moving edge does. */
       data-surface-layer={from}
-      /* **Starts one pixel *above* the section, not at its top edge.**
-       *
-       * Section boundaries on this page land on fractional pixels — the
-       * About/Contact seam sits at y = 10464.953 — because every section's
-       * height is the sum of its content's line boxes, and those are not
-       * integers. A band whose top edge coincides exactly with that boundary
-       * is rasterised by blending its own colour with whatever is behind it,
-       * which is the *next* section's surface. Cream over ink at 95% coverage
-       * produces one row of dark grey, with cream above it and cream below it:
-       * a hairline floating in the middle of the wash, which is precisely the
-       * line that appears above the contact section.
-       *
-       * Overlapping the section above by a pixel moves that blended row onto a
-       * boundary where both sides are the same colour — the band's cream over
-       * the previous section's cream — so there is nothing left to see. The
-       * extra pixel is added to the height as well, so the bottom edge and the
-       * feather below it do not move.
-       *
-       * This requires the owning section to clip horizontally only; see the
-       * note on `overflow-x-clip` at the three call sites. */
+      /* Starts 1px above the section. Section boundaries land on fractional
+         pixels, so a band flush with the edge blends its colour with the next
+         section's and renders a hairline inside the wash. Overlapping moves
+         that blend onto same-coloured pixels. Requires the owning section to
+         clip horizontally only (`overflow-x-clip`). */
       className="layer-decoration absolute inset-x-0 origin-top scale-y-0"
       style={{
         top: "-1px",

@@ -8,7 +8,7 @@
     rasterises at build time, so its output is one fixed set of pixels and can
     never answer a question about the viewer's theme. An SVG favicon is parsed
     by the browser, style rules inside it are live, and `prefers-color-scheme`
-    resolves against the browser/OS setting at paint time — including when the
+    resolves against the browser/OS setting at paint time: including when the
     reader switches theme with the tab already open.
 
     The default is the ink fill, so any renderer that ignores the media query
@@ -16,7 +16,7 @@
     rather than an invisible one.
 
     The viewBox is squared deliberately. The mark's own artwork is 250x160 and
-    its ink spans x 30..220, y 20..140 — a 190x120 box. Dropped into a favicon
+    its ink spans x 30..220, y 20..140: a 190x120 box. Dropped into a favicon
     slot at that ratio it would letterbox and render tiny. "20 -25 210 210"
     crops to a 210 square centred on the artwork, leaving a 10 unit margin left
     and right and 45 above and below, so the monogram fills the tab icon

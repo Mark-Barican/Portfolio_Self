@@ -20,7 +20,7 @@ interface Placement {
  * A technology mark with a custom tooltip naming it and what it does here.
  *
  * **Rendered in a portal, deliberately.** The marks sit in the closing
- * section's colophon row, and every ancestor of that row — the section itself —
+ * section's colophon row, and every ancestor of that row, the section itself,
  * carries `overflow: clip` so oversized decoration can be cropped. A tooltip
  * positioned inside that subtree is cropped by the same rule, which is the
  * usual reason a popover appears to be cut in half. Portalling to `body` takes
@@ -57,7 +57,7 @@ export function TechTooltip({
     const r = trigger.getBoundingClientRect();
 
     // Measured on the first open from the rendered tooltip when available, and
-    // otherwise from a conservative estimate — the clamp below makes an
+    // otherwise from a conservative estimate: the clamp below makes an
     // imperfect first frame safe rather than off-screen.
     const tip = tipRef.current?.getBoundingClientRect();
     const w = tip?.width ?? 190;

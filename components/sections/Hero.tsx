@@ -11,7 +11,7 @@ import { heroExit } from "@/lib/scenes/hero";
 import { perViewport, SCRUB, scrubbed } from "@/lib/scroll";
 
 /**
- * Hero — the page's one ink-surface opening, built as a stack of layers rather
+ * Hero: the page's one ink-surface opening, built as a stack of layers rather
  * than a two-column grid.
  *
  * Depth order, back to front:
@@ -68,7 +68,7 @@ export function Hero() {
        * it rearranges, and it is what this section used to do. The problem is
        * what `pinSpacing` costs at the far end. A pin inserts a spacer of the
        * pin's own length, and when the pin releases the section is parked at
-       * the *bottom* of that spacer — so the reader still has a full viewport
+       * the *bottom* of that spacer, so the reader still has a full viewport
        * of hero to scroll past before the next section's top reaches the top of
        * the screen. By that point the hand-off wash has run to completion and
        * the hero is uniformly cream, so that viewport is a blank cream screen.
@@ -109,7 +109,7 @@ export function Hero() {
          * The crop is a desktop device: there the surname is deliberately
          * larger than its column and slides left so the reader discovers the
          * rest of it. Below `lg` the word already fits the screen, so the same
-         * gesture has nothing to reveal — all -10% did was carry the leading
+         * gesture has nothing to reveal: all -10% did was carry the leading
          * "B" off the left edge and leave the word cut at both ends, which is
          * a crop that reads as a layout fault rather than as an intention.
          *
@@ -134,7 +134,7 @@ export function Hero() {
       {/* Hand-off wash.
        *
        * The exact cream of the section below, painted over the whole hero and
-       * brought up only *after* the surname has left — see `heroExit`. It
+       * brought up only *after* the surname has left: see `heroExit`. It
        * finishes at 0.88 of the pin and then sits still, so the last eighth of
        * the hold is a settled cream screen rather than a colour still arriving.
        *
@@ -144,7 +144,7 @@ export function Hero() {
        * out as that edge crossed the viewport. Two mechanisms, pointing
        * opposite ways: the hero dissolved to cream, and then the first thing
        * the reader met was ink being reintroduced at the top of the cream
-       * section — the dark band that used to slide up out of the fold here.
+       * section: the dark band that used to slide up out of the fold here.
        * The wash below is sufficient on its own, so the band is gone.
        *
        * Scrubbed with the rest of the timeline, so scrolling back up wipes it
@@ -153,7 +153,7 @@ export function Hero() {
         data-hero="handoff"
         /* Declares the cream it paints to the chrome's surface probe. It is
            `pointer-events-none`, so `elementsFromPoint` cannot see it and the
-           header would otherwise stay light against a fully cream screen —
+           header would otherwise stay light against a fully cream screen,
            see the note in `lib/surface.ts`. */
         data-surface-layer="cream"
         aria-hidden

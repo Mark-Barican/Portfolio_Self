@@ -138,7 +138,7 @@ export function scrubbed({
  * A reveal scene: plays on the way down, plays back out on the way up.
  *
  * Reads as onEnter / onLeave / onEnterBack / onLeaveBack. `onLeave` is
- * deliberately "none" — that fires when a block passes off the top of the
+ * deliberately "none": that fires when a block passes off the top of the
  * screen, where reversing it would burn frames on something nobody can see.
  */
 export function revealed({
@@ -166,7 +166,7 @@ export function revealed({
  * Scenes are built during layout effects, when webfonts may still be swapping
  * and lazily-loaded images have no intrinsic height yet. Both change the
  * document's height *after* the triggers measured it, which leaves starts and
- * ends pointing at the wrong scroll offsets — the usual cause of an animation
+ * ends pointing at the wrong scroll offsets: the usual cause of an animation
  * that fires visibly early or late on a cold load but is correct after a
  * resize.
  *

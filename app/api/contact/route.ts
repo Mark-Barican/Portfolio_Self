@@ -47,7 +47,7 @@ interface ContactPayload {
   name?: string;
   email?: string;
   message?: string;
-  /** Honeypot — real users never fill this. */
+  /** Honeypot: real users never fill this. */
   company?: string;
 }
 

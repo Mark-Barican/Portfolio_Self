@@ -33,7 +33,7 @@ export function Toast({
   const [typed, setTyped] = useState("");
   const [reduced, setReduced] = useState(false);
   const timers = useRef<number[]>([]);
-  // Keep the latest onClose without making it a lifecycle dependency — the
+  // Keep the latest onClose without making it a lifecycle dependency: the
   // parent re-renders (e.g. its cooldown countdown) must not restart the toast.
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;

@@ -48,7 +48,7 @@ export function createFrameScheduler(callback: () => void) {
      * shown again. For the chrome's surface probe that means the wordmark
      * holds whatever colour it had when frames stopped.
      *
-     * This is not a second animation loop — it is a one-shot timer per
+     * This is not a second animation loop, it is a one-shot timer per
      * scheduled callback, cancelled by `run` the instant a real frame lands,
      * so in the normal case it costs one `clearTimeout` and never executes. */
     if (!timer) timer = window.setTimeout(run, 250);

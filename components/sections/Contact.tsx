@@ -33,7 +33,7 @@ function EmailCallToAction() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Clipboard may be unavailable (e.g. insecure context) — fail silently.
+      // Clipboard may be unavailable (e.g. insecure context): fail silently.
     }
   };
 
@@ -60,7 +60,7 @@ function EmailCallToAction() {
             {copied ? "Copied to clipboard" : "Write to me directly"}
           </span>
           {/* Selectable, unlike the rest of the page. If the clipboard write
-              above fails there has to be a way to get the address by hand —
+              above fails there has to be a way to get the address by hand,
               see the note in `globals.css`. */}
           <span
             data-selectable
@@ -82,7 +82,7 @@ function EmailCallToAction() {
   );
 }
 
-/** One direct link — GitHub, LinkedIn, the résumé. */
+/** One direct link: GitHub, LinkedIn, the résumé. */
 function DirectLink({
   href,
   label,
@@ -121,7 +121,7 @@ function DirectLink({
         </span>
       </span>
 
-      {/* Slides out and up on hover — the "social" interaction in the page's
+      {/* Slides out and up on hover: the "social" interaction in the page's
           link system. Transform only. */}
       <LuArrowUpRight
         size={18}
@@ -133,13 +133,13 @@ function DirectLink({
 }
 
 /**
- * The final destination — contact and footer as one dark section rather than
+ * The final destination: contact and footer as one dark section rather than
  * two stacked ones.
  *
  * They used to be genuinely separate: a cream `Contact` section inside `main`,
  * and an ink `Footer` rendered after it from the root layout, with a surface
- * change between them. That meant the page ended twice — a closing statement,
- * then a second closing block in a different colour — and the last thing a
+ * change between them. That meant the page ended twice: a closing statement,
+ * then a second closing block in a different colour, and the last thing a
  * reader met was a colophon rather than a way to get in touch.
  *
  * Now there is one ink surface from the About boundary to the bottom of the
@@ -148,13 +148,13 @@ function DirectLink({
  * the form, and only then the navigation, the credit and the year. The footer
  * material is still all there; it is just no longer a separate destination.
  *
- * The composition is asymmetric on purpose — the statement runs to the left
- * edge of the measure, the form is offset down and right — so the two read as
+ * The composition is asymmetric on purpose: the statement runs to the left
+ * edge of the measure, the form is offset down and right, so the two read as
  * one spread rather than as two halves of a split.
  *
  * There is no oversized `BARICAN` at the foot any more. It was there to bookend
  * the hero, and as a device that was fine, but it added most of a screen of
- * decoration *below* the last useful thing on the page — so the reader's reward
+ * decoration *below* the last useful thing on the page, so the reader's reward
  * for finishing the contact form was another screen of scrolling to reach the
  * bottom. The name is already in the wordmark directly above the colophon.
  *
@@ -223,25 +223,10 @@ export function Contact() {
           0.25,
         );
 
-      /* ------------------------------------------------------------------ */
-      /*  The form reveals against its own position, not the left column's.  */
-      /*                                                                     */
-      /*  It used to share `[data-contact-col]` with the "Elsewhere" list and */
-      /*  ride the same staggered tween, which is keyed to                    */
-      /*  `[data-contact-body]` — an element in the *other* grid column,      */
-      /*  several hundred pixels lower than the form's own top edge. Being    */
-      /*  second in the stagger, the form did not start moving until 0.39 of  */
-      /*  that timeline.                                                      */
-      /*                                                                     */
-      /*  Arriving from the nav lands the reader with that timeline only      */
-      /*  part-way through, so the form was still at `opacity: 0` while       */
-      /*  everything around it had appeared: the reader clicks "Contact" and  */
-      /*  is shown a contact section with no visible way to make contact.     */
-      /*                                                                     */
-      /*  Keyed to itself and finishing high in the viewport, it is complete  */
-      /*  by the time it has been scrolled to under any approach — jumped to  */
-      /*  from the nav, scrolled into, or refreshed onto.                     */
-      /* ------------------------------------------------------------------ */
+      /* The form reveals against its own position rather than the left
+         column's. Sharing the staggered tween keyed to `[data-contact-body]`
+         meant arriving from the nav left it at `opacity: 0`, showing a
+         contact section with no visible way to make contact. */
       gsap.from("[data-contact-form]", {
         opacity: 0,
         y: 30,
@@ -297,8 +282,8 @@ export function Contact() {
       /* `overflow-x-clip`, not `overflow-clip`: the clip exists to stop wide
          decoration widening the document, which is a horizontal concern.
          Clipping vertically as well is what stopped `SurfaceEdge` covering the
-         fractional-pixel seam at this section's top edge — see the note there. */
-      /* No `scroll-mt`, like every other section — the page anchors sections to
+         fractional-pixel seam at this section's top edge: see the note there. */
+      /* No `scroll-mt`, like every other section: the page anchors sections to
          the top of the viewport and lets each one's own top padding clear the
          header. `pt-24` here is deeper than the `py-20` the others use because
          this section has the most to fit on one screen. See `scroll-padding-top`
@@ -340,8 +325,8 @@ export function Contact() {
         {/*                                                                   */}
         {/*  The statement, the address and the direct links run down the      */}
         {/*  left; the form sits beside them on the right, starting at the     */}
-        {/*  same top edge. It used to be stacked — statement, then address    */}
-        {/*  full-width, then links and form side by side underneath — which   */}
+        {/*  same top edge. It used to be stacked: statement, then address    */}
+        {/*  full-width, then links and form side by side underneath, which   */}
         {/*  read correctly but ran to nearly two screens, so the closing      */}
         {/*  section had a second half the reader had to go and find.          */}
         {/*                                                                   */}
@@ -421,7 +406,7 @@ export function Contact() {
         </div>
 
         {/* ---------------------------------------------------------------- */}
-        {/*  Footer band — navigation, credit, year.                          */}
+        {/*  Footer band: navigation, credit, year.                          */}
         {/* ---------------------------------------------------------------- */}
         <div data-contact-foot className="mt-16 sm:mt-20">
           <div

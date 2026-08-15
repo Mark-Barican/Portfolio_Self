@@ -35,7 +35,7 @@ export function useActiveSection(sectionIds: readonly string[]): string {
       }
 
       // The last section is often shorter than the probe offset, so it would
-      // never straddle the line — pin it once the page is scrolled to the end.
+      // never straddle the line: pin it once the page is scrolled to the end.
       const atBottom =
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 8;

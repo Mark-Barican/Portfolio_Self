@@ -10,7 +10,7 @@ interface ContainerProps {
 
 /**
  * Centered, max-width content wrapper with consistent responsive padding.
- * Server component — pure layout, no interactivity.
+ * Server component: pure layout, no interactivity.
  */
 export function Container({
   children,

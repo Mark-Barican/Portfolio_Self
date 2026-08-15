@@ -21,7 +21,7 @@ interface RevealProps {
  * enter the viewport.
  *
  * The element is fully visible in CSS and GSAP animates *from* a hidden start
- * state, set before the first paint. That ordering is deliberate — content can
+ * state, set before the first paint. That ordering is deliberate: content can
  * never be stranded invisible by a script that failed to run, a reduced-motion
  * preference, or a ScrollTrigger that never fired. The worst case is that the
  * animation is skipped and the content is simply there.

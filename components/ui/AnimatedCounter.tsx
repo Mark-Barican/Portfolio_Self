@@ -14,7 +14,7 @@ interface AnimatedCounterProps {
  * Counts up from 0 → `value` the first time it scrolls into view, using native
  * requestAnimationFrame + IntersectionObserver (no JS animation runtime). A
  * fail-safe timeout snaps to the final value if rAF can't run, and
- * reduced-motion renders the final value immediately — so the number is never
+ * reduced-motion renders the final value immediately, so the number is never
  * stuck at 0.
  */
 export function AnimatedCounter({

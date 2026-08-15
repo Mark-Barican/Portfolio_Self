@@ -117,7 +117,7 @@ function JourneyCard({ item, index }: { item: JourneyItem; index: number }) {
 }
 
 /**
- * "My Journey" — the story timeline as a horizontal track of tilted cards.
+ * "My Journey": the story timeline as a horizontal track of tilted cards.
  *
  * Three separate motion systems, kept apart so none of them owns the same
  * property twice:
@@ -134,8 +134,8 @@ function JourneyCard({ item, index }: { item: JourneyItem; index: number }) {
  * used to be the latter inside an `overflow-hidden` box, which had two faults:
  *
  *  1. `overflow-hidden` still creates a *programmatically* scrollable box. The
- *     moment anything inside it took focus — a Tab, or a click on a card's
- *     expand button — the browser scrolled it to bring that element into view,
+ *     moment anything inside it took focus: a Tab, or a click on a card's
+ *     expand button: the browser scrolled it to bring that element into view,
  *     jumping straight to the end of the timeline and leaving '21 off-screen.
  *     Worse, that scrollLeft was invisible to the transform, so the two then
  *     disagreed about where the track was.
@@ -158,7 +158,7 @@ export function Journey() {
   const railRef = useRef<HTMLSpanElement>(null);
 
   /* ---------------------------------------------------------------------- */
-  /*  Progress rail — reads the track, never drives it.                      */
+  /*  Progress rail: reads the track, never drives it.                      */
   /* ---------------------------------------------------------------------- */
   useEffect(() => {
     const track = viewportRef.current;
@@ -188,7 +188,7 @@ export function Journey() {
   }, [viewportRef]);
 
   /* ---------------------------------------------------------------------- */
-  /*  Arrival — scrubbed against the section's own progress.                 */
+  /*  Arrival: scrubbed against the section's own progress.                 */
   /* ---------------------------------------------------------------------- */
   useGsap(
     () => {
@@ -201,7 +201,7 @@ export function Journey() {
        * and what should be waiting on the other side of that is the next
        * section, already there. Animating the title in made it a separate
        * object that climbed up out of the bottom of an empty cream screen a
-       * beat later — the page appearing to build itself rather than the reader
+       * beat later: the page appearing to build itself rather than the reader
        * arriving somewhere.
        *
        * So "My Journey" is simply in the document, at rest, at the top of its
@@ -215,7 +215,7 @@ export function Journey() {
        *
        * The cards arrive from the right, and 110px of travel is a fraction of a
        * desktop screen. On a 412px phone the card is already 354px wide and
-       * sits 16px from the left edge, leaving a 42px gutter — so the same 110px
+       * sits 16px from the left edge, leaving a 42px gutter, so the same 110px
        * throw starts each card 68px *past* the right edge of the screen. It is
        * a transform, so it never widens the document or creates a scrollbar,
        * but for the whole of the reveal the reader watches the card slide in
@@ -327,9 +327,9 @@ export function Journey() {
       {/*  The one piece of chrome that makes the drag legible: without   */}
       {/*  it a horizontally scrolling track on a hidden scrollbar gives  */}
       {/*  no indication that there is anything past the right edge, or   */}
-      {/*  how far through it you are. Decorative — the track itself      */}
+      {/*  how far through it you are. Decorative: the track itself      */}
       {/*  already carries the accessible name and is keyboard-scrollable */}
-      {/*  — so it is hidden from assistive tech.                         */}
+      {/* , so it is hidden from assistive tech.                         */}
       {/* -------------------------------------------------------------- */}
       <div
         data-journey-rail

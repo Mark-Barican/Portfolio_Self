@@ -13,7 +13,7 @@ import { isDarkSurfaceAt } from "@/lib/surface";
  * `[data-surface="dark"]` elements and test whether `probeY` fell inside one of
  * their rects, which is cheaper but answers a subtly different question: what
  * section is here, rather than what colour is here. Those two diverge at
- * precisely the moments this hook exists to handle — the page's four surface
+ * precisely the moments this hook exists to handle: the page's four surface
  * transitions. Through the whole of the hero's cream hand-off the hero is still
  * a `data-surface="dark"` element, so the wordmark stayed cream against
  * cream until the section boundary itself went past, well after the background
@@ -25,7 +25,7 @@ import { isDarkSurfaceAt } from "@/lib/surface";
  * boundaries, and there is no second system for a timeline to fight with.
  *
  * Costs one `elementsFromPoint` and a few style reads per animation frame,
- * coalesced by `createFrameScheduler` and only while scrolling — the same
+ * coalesced by `createFrameScheduler` and only while scrolling: the same
  * budget the custom cursor already runs on.
  */
 export function useOverDarkSurface(probeY: number): boolean {
@@ -37,7 +37,7 @@ export function useOverDarkSurface(probeY: number): boolean {
     // own surface rather than a card or a button sitting on top of it.
     // `surfacesOnly`: this asks which *section surface* is under the probe,
     // not which object. Without it, content that happens to cross the header
-    // line — the Stack's cream tech cards, for one — flips the wordmark on a
+    // line, the Stack's cream tech cards, for one, flips the wordmark on a
     // section whose surface never changed.
     const check = () =>
       setOverDark(

@@ -63,7 +63,7 @@ function computeColor(value: string): Rgba | null {
    * Reading `fillStyle` back does not help: the canvas accepts `oklab()` and
    * returns the *same* `oklab()` string rather than normalising it, so the
    * round trip is a no-op. Painting the colour and sampling the pixel is what
-   * actually resolves it — verified against the nav, which rasterises to
+   * actually resolves it: verified against the nav, which rasterises to
    * [235, 234, 217] at alpha 0.851, exactly the cream it is authored as.
    *
    * An invalid colour leaves `fillStyle` untouched; seeding it transparent
@@ -104,7 +104,7 @@ function relativeLuminance({ r, g, b }: Rgba): number {
  * Walks the hit-test stack and takes the first element painting a effectively
  * opaque background, so it picks up components (an ink button, the yellow CTA)
  * and not just section backgrounds. Elements can opt out of the guess with
- * `data-cursor-surface="dark" | "light"` — needed for images, whose pixels are
+ * `data-cursor-surface="dark" | "light"`: needed for images, whose pixels are
  * not readable from CSS.
  */
 export function isDarkSurfaceAt(
@@ -125,7 +125,7 @@ export function isDarkSurfaceAt(
    * the thing actually painting the screen and reported the *section's* own
    * colour instead. Measured: at the end of the hero exit, with the wash at
    * full opacity and the viewport entirely cream, the probe still answered
-   * "dark" — so the wordmark stayed cream on cream until the section boundary
+   * "dark", so the wordmark stayed cream on cream until the section boundary
    * itself went by, which is the exact lag this module was written to remove.
    *
    * These layers are therefore consulted explicitly, by geometry rather than
@@ -165,7 +165,7 @@ export function isDarkSurfaceAt(
   /* Section surfaces only, for chrome that sits at a fixed point.
    *
    * The walk below deliberately reads *whatever* is under the point, which is
-   * what the cursor wants — crossing an ink button or the yellow CTA should
+   * what the cursor wants: crossing an ink button or the yellow CTA should
    * recolour the ring. Fixed chrome wants the opposite. The header probes one
    * spot near the top of the screen, and any content that happens to pass
    * under it is not the surface it is sitting on.

@@ -18,7 +18,7 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 const MAX_TILT = 9;
 
 /**
- * Built to Perform — the work as a numbered editorial index.
+ * Built to Perform: the work as a numbered editorial index.
  *
  * One interaction carries the section: hovering a row lifts its title, brings
  * its metadata up to full strength, and floats that project's cover after the
