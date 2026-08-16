@@ -1,18 +1,16 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { LuArrowUp, LuArrowUpRight, LuCheck, LuCopy, LuDownload } from "react-icons/lu";
-import { Logo } from "@/components/Logo";
+import { LuArrowUpRight, LuCheck, LuCopy, LuDownload } from "react-icons/lu";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { SurfaceEdge } from "@/components/ui/SurfaceEdge";
 import { SectionScene } from "@/components/ui/SectionScene";
-import { TechTooltip } from "@/components/ui/TechTooltip";
-import { BUILT_WITH, SOCIAL_LINKS } from "@/lib/data";
-import { LINKS, NAV_SECTIONS, SITE } from "@/lib/constants";
+import { Footer } from "@/components/Footer";
+import { SOCIAL_LINKS } from "@/lib/data";
+import { LINKS, SITE } from "@/lib/constants";
 import { gsap } from "@/lib/gsap";
 import { EASE, SCRUB, scrubbed } from "@/lib/scroll";
 import { useGsap } from "@/hooks/useGsap";
-import { useMagnetic } from "@/hooks/useMagnetic";
 
 /**
  * The email, as the section's primary control rather than a line of text with
@@ -164,11 +162,6 @@ function DirectLink({
  */
 export function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
-  const year = new Date().getFullYear();
-
-  // Delegated across the whole section, so the social discs and the
-  // back-to-top control lean toward the pointer for two listeners total.
-  useMagnetic(sectionRef);
 
   useGsap(
     () => {
@@ -405,110 +398,8 @@ export function Contact() {
           </div>
         </div>
 
-        {/* ---------------------------------------------------------------- */}
-        {/*  Footer band: navigation, credit, year.                          */}
-        {/* ---------------------------------------------------------------- */}
-        <div data-contact-foot className="mt-16 sm:mt-20">
-          <div
-            data-foot-rule
-            aria-hidden
-            className="h-px w-full bg-cream/20"
-          />
+        <Footer />
 
-          <div className="flex flex-col justify-between gap-10 pt-10 lg:flex-row lg:items-start">
-            <div data-foot-part className="max-w-sm">
-              <a
-                href="#home"
-                className="inline-block text-cream"
-                aria-label={`${SITE.shortName}, back to top`}
-              >
-                <Logo title={null} className="h-10 w-auto" />
-              </a>
-              <p className="mt-4 text-base leading-relaxed text-cream/60">
-                {SITE.role} based in {SITE.location}. Building web experiences
-                that look and work exactly how you imagined, end to end.
-              </p>
-            </div>
-
-            {/* `py-2` on each link rather than gap between them: spaced-caps
-                type is only ~17px tall, which is under any reasonable touch
-                target. The padding is what is tapped; the gap is reduced to
-                match so the visual rhythm is unchanged. */}
-            <nav
-              data-foot-part
-              aria-label="Footer"
-              className="grid grid-cols-2 gap-x-8 sm:gap-x-14"
-            >
-              {NAV_SECTIONS.map((item) => (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  data-link="nav"
-                  className="eyebrow py-2 text-cream/60 transition-colors duration-300 hover:text-cream"
-                >
-                  <span className="link-label">{item.label}</span>
-                </a>
-              ))}
-            </nav>
-
-            <div data-foot-part className="flex flex-wrap items-center gap-3">
-              {SOCIAL_LINKS.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    aria-label={link.label}
-                    data-link="social"
-                    data-magnetic
-                    className="grid h-11 w-11 place-items-center rounded-full border border-cream/25 text-cream/70 transition-colors hover:border-accent hover:text-accent"
-                  >
-                    <Icon size={17} aria-hidden />
-                  </a>
-                );
-              })}
-              <a
-                href="#home"
-                aria-label="Back to top"
-                data-cursor="hover"
-                data-magnetic
-                className="grid h-11 w-11 place-items-center rounded-full bg-accent text-ink"
-              >
-                <LuArrowUp size={17} aria-hidden />
-              </a>
-            </div>
-          </div>
-
-          <div
-            data-foot-part
-            className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-cream/12 pt-5 sm:flex-row sm:items-center"
-          >
-            <p className="eyebrow text-cream/50">
-              © {year} {SITE.name}. All rights reserved.
-            </p>
-
-            {/* Marks only, each with a custom tooltip naming it and the job it
-                does in this build. The native `title` attribute is gone: it is
-                slow to appear, styled by the OS rather than the page, and
-                cannot be reached without a mouse. See `TechTooltip`. */}
-            <ul className="flex flex-wrap items-center gap-x-1 gap-y-2">
-              <li aria-hidden className="eyebrow mr-3 text-cream/35">
-                Built with
-              </li>
-              {BUILT_WITH.map((tech) => (
-                <li key={tech.name}>
-                  <TechTooltip
-                    name={tech.name}
-                    role={tech.role}
-                    icon={tech.icon}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
       </div>
       </SectionScene>
 

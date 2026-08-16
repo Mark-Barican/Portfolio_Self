@@ -109,7 +109,8 @@ export default function RootLayout({
         {/* Decorative, fixed grain layer */}
         <Noise />
 
-        {/* Chrome */}
+        {/* Chrome. `LoadingScreen` covers the cold start and every route
+            change after it. */}
         <LoadingScreen />
         <ScrollProgress />
         <Cursor />

@@ -35,6 +35,19 @@ export const LINKS = {
   resume: "/Mark_Barican_Software_Web_Developer_Resume.pdf",
 } as const;
 
+/** Footer links that are pages rather than sections of the home page. */
+export const LEGAL_LINKS = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
+] as const;
+
+/**
+ * Shown at the top of both legal pages. One constant so the two can never
+ * disagree about when they were last revised. Update it when the wording
+ * changes, not on every deploy.
+ */
+export const LEGAL_UPDATED = "15 August 2026";
+
 /** In-page navigation, also used for active-section detection. */
 export const NAV_SECTIONS = [
   { label: "Home", href: "#home", id: "home" },

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import { SITE } from "@/lib/constants";
 
@@ -19,6 +20,10 @@ const CURTAIN_MS = 2900;
  */
 const HEADER_OFFSET = 0;
 
+const reducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /**
  * Intro curtain: the brand mark centred on ink with a percentage counting up
  * to 100 beneath it, then the whole panel wipes upward to reveal the page.
@@ -28,17 +33,31 @@ const HEADER_OFFSET = 0;
  * of that the wipe is a CSS animation, not JS: the overlay has to clear
  * itself even if the bundle never executes. React only drives the number and
  * then unmounts the (already off-screen) panel.
+ *
+ * It also covers client-side navigation, replaying in full on every route
+ * change so moving to a legal page and back reads the same as a refresh. There
+ * is nothing to wait on — the App Router has already swapped the route — so
+ * this is a curtain rather than a spinner, which is why it can be a fixed
+ * length.
  */
 export function LoadingScreen() {
+  const pathname = usePathname();
   const [progress, setProgress] = useState(0);
   const [done, setDone] = useState(false);
+  const [route, setRoute] = useState(pathname);
   const timers = useRef<number[]>([]);
 
+  /* Re-arm during render rather than from an effect: the curtain has to be in
+     the same commit as the incoming route, or the browser gets to paint one
+     frame of the new page before it is covered. */
+  if (route !== pathname) {
+    setRoute(pathname);
+    setProgress(0);
+    setDone(reducedMotion());
+  }
+
   useEffect(() => {
-    const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (reduced) {
+    if (reducedMotion()) {
       setDone(true);
       return;
     }
@@ -84,12 +103,15 @@ export function LoadingScreen() {
       timers.current = [];
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [pathname]);
 
   if (done) return null;
 
   return (
+    /* Keyed so a navigation that lands while the curtain is still up restarts
+       the CSS wipe instead of inheriting the tail of the previous one. */
     <div
+      key={pathname}
       aria-hidden
       className="animate-loader-out fixed inset-0 z-[300] flex flex-col items-center justify-center gap-10 bg-ink-surface px-6"
     >
