@@ -230,7 +230,12 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                           src={src}
                           alt={`${p.title} screenshot ${i + 1}`}
                           fill
-                          sizes="(max-width: 640px) 100vw, 240px"
+                          /* 2x the ~240px rendered column, for the same reason
+                             the hover preview over-requests: these are dense UI
+                             screenshots, and the detail has to reach the
+                             browser before the browser can downsample it. */
+                          sizes="(max-width: 640px) 100vw, 480px"
+                          quality={95}
                           className="object-cover object-top"
                         />
                       </div>

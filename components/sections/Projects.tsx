@@ -149,7 +149,16 @@ export function Projects() {
                     src={hovered.cover}
                     alt=""
                     fill
-                    sizes="384px"
+                    /* Deliberately double the 24rem box. `sizes` normally
+                       states the rendered width and lets the browser pick the
+                       variant, which on a 1x display means a 384px-wide file
+                       for a screenshot that was 1884px wide: a 5x downscale
+                       baked in by the encoder at quality 75. Asking for 768
+                       hands the browser the detail and lets *it* do the
+                       downsampling, which is what makes the interface type in
+                       these covers survive at this size. */
+                    sizes="768px"
+                    quality={95}
                     className="object-cover object-top"
                   />
                 )}

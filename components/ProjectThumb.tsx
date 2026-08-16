@@ -35,7 +35,16 @@ export function ProjectThumb({
           src={project.cover}
           alt={`${project.title} · ${project.tagline}`}
           fill
-          sizes={size === "lg" ? "(max-width: 768px) 100vw, 768px" : "(max-width: 1024px) 100vw, 50vw"}
+          sizes={
+            size === "lg"
+              ? "(max-width: 768px) 100vw, 1536px"
+              : "(max-width: 1024px) 100vw, 50vw"
+          }
+          /* Covers are UI screenshots: dense small text shown at a heavy
+             downscale. Next's default 75 is tuned for photographs, where the
+             smearing it trades away is invisible; on 11px interface type it
+             reads as a blurred card. */
+          quality={95}
           className="object-cover object-top"
         />
         {/* Nothing is layered over the screenshot.

@@ -148,6 +148,7 @@ export function ProjectRow({
                 fill
                 loading="lazy"
                 sizes="(max-width: 640px) 92vw, 0px"
+                quality={95}
                 className="object-cover object-top"
               />
             </span>
