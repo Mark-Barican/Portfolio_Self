@@ -6,7 +6,14 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useIsDesktop } from "@/hooks/useMediaQuery";
 import { contrastInkAt } from "@/lib/surface";
 
-type CursorMode = "default" | "hover" | "drag" | "view";
+type CursorMode = "default" | "hover" | "drag" | "view" | "visit";
+
+/** The word inside the badge, for the modes that carry one. */
+const LABEL: Partial<Record<CursorMode, string>> = {
+  drag: "Drag",
+  view: "View",
+  visit: "Visit ↗",
+};
 
 /** Base ring diameter in px. Every other size is a scale of this. */
 const RING = 28;
@@ -25,6 +32,8 @@ const SCALE: Record<CursorMode, number> = {
   hover: 1.85,
   drag: 2.6,
   view: 2.6,
+  // A touch larger: "Visit ↗" is the longest word a badge has to hold.
+  visit: 2.9,
 };
 
 /**
@@ -50,7 +59,7 @@ const CLEAR = "rgba(0, 0, 0, 0)";
 
 /**
  * Editorial custom cursor: a ring that trails the pointer and morphs into a
- * labelled badge over annotated zones (`data-cursor="drag" | "view"`).
+ * labelled badge over annotated zones (`data-cursor="drag" | "view" | "visit"`).
  *
  * Its colour is derived from whatever is actually beneath it. The hit-test
  * stack is walked for the first opaque background and its luminance decides
@@ -79,7 +88,7 @@ export function Cursor() {
 
   const [mode, setMode] = useState<CursorMode>("default");
   const [tint, setTint] = useState("#0a0a0a");
-  const badge = mode === "drag" || mode === "view";
+  const badge = mode in LABEL;
 
   useEffect(() => {
     if (!enabled) return;
@@ -109,7 +118,9 @@ export function Cursor() {
       const label = target?.closest<HTMLElement>("[data-cursor]")?.dataset
         .cursor;
 
-      if (label === "drag" || label === "view") setMode(label);
+      if (label === "drag" || label === "view" || label === "visit") {
+        setMode(label);
+      }
       else if (
         label === "hover" ||
         target?.closest("a, button, input, textarea, [role='button']")
@@ -200,7 +211,7 @@ export function Cursor() {
           ref={labelRef}
           className="eyebrow invisible absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold whitespace-nowrap text-ink opacity-0"
         >
-          {mode === "drag" ? "Drag" : "View"}
+          {LABEL[mode]}
         </span>
       </div>
 

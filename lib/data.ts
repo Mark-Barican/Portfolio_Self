@@ -89,6 +89,7 @@ export const JOURNEY: JourneyItem[] = [
     story:
       "At Boxed Blossoms I architected the initial build on Shopify Hydrogen with Oxygen and GraphQL, then made the hard call to re-platform to themes and Liquid to hit the deadline. Real team, real client, real launch. The storefront is still in production today.",
     handle: "@boxedblossoms",
+    href: "https://boxedblossoms.com/",
   },
   {
     year: "'25",
@@ -99,6 +100,11 @@ export const JOURNEY: JourneyItem[] = [
     story:
       "Delivered a responsive e-commerce site for Rise Beauty & Wellness. Built LoanLink, a full loan management system nominated for the Inabel Awards. And a probability engine I made for fun, the Endfield Gacha Simulator, quietly grew past 5,000 users. Everything compounding at once.",
     handle: "@rise",
+    // The Heera Glow storefront built for Rise Beauty & Wellness.
+    trail: [
+      { src: "/HeeraGlow_images/home.webp", caption: "Heera Glow · Home" },
+      { src: "/HeeraGlow_images/about.webp", caption: "Heera Glow · About us" },
+    ],
   },
   {
     year: "'26",

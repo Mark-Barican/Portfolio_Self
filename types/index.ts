@@ -89,6 +89,20 @@ export interface JourneyItem {
   story: string;
   /** Playful @handle credit, heynesh-style. */
   handle: string;
+  /** The client's live site. Makes the whole card a link to it. */
+  href?: string;
+  /**
+   * Screenshots that trail the cursor across the card, in order. Clicking the
+   * card opens them full size.
+   */
+  trail?: Screenshot[];
+}
+
+/** One screenshot in a journey card's trail and viewer. */
+export interface Screenshot {
+  src: string;
+  /** Shown under the image in the viewer, and used as its alt text. */
+  caption: string;
 }
 
 /** A capability row in the "What You Get" section. */

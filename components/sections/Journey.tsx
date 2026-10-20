@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LuPlus } from "react-icons/lu";
+import { ImageTrail } from "@/components/ui/ImageTrail";
+import { ScreenshotViewer } from "@/components/ui/ScreenshotViewer";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionScene } from "@/components/ui/SectionScene";
 import { CURRENT_YEAR, JOURNEY } from "@/lib/data";
@@ -21,6 +23,28 @@ function timeAgo(fullYear: string): string {
 }
 
 /**
+ * Fewest frames a card's image trail is dealt from. Each frame is one DOM node
+ * that gets reused as the trail cycles, so two screenshots on their own could
+ * never put more than two on screen at once. Sized to the slowed trail: each
+ * frame is on screen for about 1.6s, and too few would be pulled back to the
+ * cursor before they had finished fading.
+ */
+const TRAIL_FRAMES = 10;
+
+/**
+ * The hover treatment for a card that does something when pressed: it
+ * straightens off its tilt and lifts onto a hard shadow, so it reads as
+ * something to press rather than to read. Mirrored on keyboard focus of the
+ * card's action. The tilt lives on the article and the deal-in drives the
+ * wrapper, so the two never fight over the same transform.
+ */
+const ACTION_CARD =
+  "group isolate transition-[rotate,translate,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:rotate-0 hover:shadow-[6px_6px_0_var(--color-ink)] has-[>:focus-visible]:-translate-y-1 has-[>:focus-visible]:rotate-0 has-[>:focus-visible]:shadow-[6px_6px_0_var(--color-ink)]";
+
+/** The card's action, stretched invisibly over the whole of it. */
+const ACTION_SURFACE = "absolute inset-0 z-10 rounded-2xl";
+
+/**
  * One chapter.
  *
  * Sized as a large timeline object rather than a card in a row: at ~28rem wide
@@ -31,8 +55,20 @@ function timeAgo(fullYear: string): string {
  */
 function JourneyCard({ item, index }: { item: JourneyItem; index: number }) {
   const [expanded, setExpanded] = useState(false);
+  const cardRef = useRef<HTMLElement>(null);
   const copyRef = useRef<HTMLParagraphElement>(null);
   const iconRef = useRef<HTMLSpanElement>(null);
+  const [viewing, setViewing] = useState(false);
+  // Stable, so the viewer's key handling is not rebound on every render.
+  const closeViewer = useCallback(() => setViewing(false), []);
+
+  // Memoised so expanding the card does not tear the trail down and rebuild it.
+  const trail = useMemo(() => {
+    const sources = item.trail?.map((shot) => shot.src);
+    if (!sources?.length) return null;
+    const rounds = Math.ceil(TRAIL_FRAMES / sources.length);
+    return Array.from({ length: rounds }, () => sources).flat();
+  }, [item.trail]);
 
   // The copy has already been swapped by React when this runs, so it animates
   // the incoming text in. Skipped on first mount: there is nothing to exchange
@@ -58,11 +94,49 @@ function JourneyCard({ item, index }: { item: JourneyItem; index: number }) {
   return (
     <div data-journey-card className="shrink-0">
       <article
+        ref={cardRef}
         className={cn(
           "relative flex h-[30rem] w-[min(84vw,22rem)] flex-col rounded-2xl border-2 border-ink bg-card p-7 select-none sm:h-[34rem] sm:w-[25rem] sm:p-8 lg:h-[38rem] lg:w-[28rem]",
           index % 2 === 1 ? "rotate-1" : "-rotate-1",
+          (item.href || trail) && ACTION_CARD,
         )}
       >
+        {/* The whole card is the action, without a written link or button:
+            the custom cursor names it on hover ("Visit" or "View"). Stretched
+            over the card rather than wrapping it, since the expand button
+            inside cannot be nested in another control; the button and the
+            expanded story are lifted above it. The click that ends a drag is
+            already swallowed by `useDragScroll`, so throwing the track and
+            letting go over a card never fires it. */}
+        {(item.href || trail) && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 origin-bottom scale-y-0 rounded-[14px] bg-accent/45 transition-transform duration-500 ease-out group-hover:scale-y-100 group-has-[>:focus-visible]:scale-y-100"
+          />
+        )}
+        {item.href ? (
+          // Not draggable, or the browser's own link drag would take the
+          // pointer away from the track's drag-scroll.
+          <a
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            draggable={false}
+            data-cursor="visit"
+            aria-label={`Visit ${new URL(item.href).hostname} (opens in a new tab)`}
+            className={ACTION_SURFACE}
+          />
+        ) : trail ? (
+          <button
+            type="button"
+            onClick={() => setViewing(true)}
+            aria-haspopup="dialog"
+            aria-label="View screenshots"
+            data-cursor="view"
+            className={ACTION_SURFACE}
+          />
+        ) : null}
+
         <div className="flex items-start justify-between gap-4">
           <span className="font-display text-7xl leading-none text-ink lg:text-8xl">
             {item.year}
@@ -74,7 +148,7 @@ function JourneyCard({ item, index }: { item: JourneyItem; index: number }) {
             aria-label={expanded ? "Show less" : "Read more"}
             data-cursor="hover"
             className={cn(
-              "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-ink transition-colors",
+              "relative z-20 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-ink transition-colors",
               expanded ? "bg-ink text-cream" : "bg-accent text-ink",
             )}
           >
@@ -93,7 +167,13 @@ function JourneyCard({ item, index }: { item: JourneyItem; index: number }) {
         {/* Short teaser to full story. Cross-faded on the same element rather
             than swapped between two: the card is a fixed height, so there is
             nothing to animate open, only the copy inside to exchange. */}
-        <div className="relative mt-4 grow overflow-hidden">
+        <div
+          className={cn(
+            "relative mt-4 grow overflow-hidden",
+            // Over the card link while expanded, so the story still scrolls.
+            expanded && "z-20",
+          )}
+        >
           <p
             ref={copyRef}
             className={cn(
@@ -112,6 +192,32 @@ function JourneyCard({ item, index }: { item: JourneyItem; index: number }) {
           <span className="eyebrow text-faint">{timeAgo(item.fullYear)}</span>
         </div>
       </article>
+
+      {item.trail && trail && (
+        <>
+          <ImageTrail
+            targetRef={cardRef}
+            items={trail}
+            // The screenshots are 2:1 pages; a square frame would crop most of
+            // each one away.
+            size={280}
+            aspectRatio={2}
+            radius={12}
+            // Half speed and a longer stride than the original, so each shot
+            // stays long enough to register as a page and not a flicker.
+            pace={2}
+            threshold={100}
+            appearScale={0}
+            zoom={2.4}
+            flash={0.6}
+          />
+          <ScreenshotViewer
+            shots={item.trail}
+            open={viewing}
+            onClose={closeViewer}
+          />
+        </>
+      )}
     </div>
   );
 }
