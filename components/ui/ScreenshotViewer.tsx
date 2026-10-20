@@ -178,16 +178,20 @@ export function ScreenshotViewer({ shots, open, onClose }: ScreenshotViewerProps
             ))}
           </div>
 
-          <figcaption className="mt-4 flex items-center justify-between gap-4">
+          {/* Caption and controls share a row from `sm`. On a phone the two
+              cannot fit side by side, so the controls take a row of their
+              own, counter left and arrows right, rather than squeezing the
+              caption and the counter onto two lines each. */}
+          <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
             <span className="eyebrow text-cream">{current?.caption}</span>
 
-            <div className="flex items-center gap-3">
-              <span className="eyebrow text-cream/60 tabular-nums">
+            <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-start">
+              <span className="eyebrow whitespace-nowrap text-cream/60 tabular-nums">
                 {String(index + 1).padStart(2, "0")} /{" "}
                 {String(count).padStart(2, "0")}
               </span>
               {count > 1 && (
-                <>
+                <div className="flex items-center gap-3">
                   <button
                     type="button"
                     onClick={() => step(-1)}
@@ -206,7 +210,7 @@ export function ScreenshotViewer({ shots, open, onClose }: ScreenshotViewerProps
                   >
                     <LuArrowRight size={20} />
                   </button>
-                </>
+                </div>
               )}
             </div>
           </figcaption>

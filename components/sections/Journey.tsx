@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LuPlus } from "react-icons/lu";
 import { ImageTrail } from "@/components/ui/ImageTrail";
+import { KeepHyphens } from "@/components/ui/KeepHyphens";
 import { ScreenshotViewer } from "@/components/ui/ScreenshotViewer";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionScene } from "@/components/ui/SectionScene";
@@ -161,7 +162,7 @@ function JourneyCard({ item, index }: { item: JourneyItem; index: number }) {
         </div>
 
         <h3 className="font-display mt-5 text-[1.75rem] text-ink sm:text-[2rem] lg:text-[2.25rem]">
-          {item.title}
+          <KeepHyphens text={item.title} />
         </h3>
 
         {/* Short teaser to full story. Cross-faded on the same element rather

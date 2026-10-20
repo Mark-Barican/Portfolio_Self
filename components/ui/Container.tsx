@@ -25,7 +25,9 @@ export function Container({
   return (
     <Component
       className={cn(
-        "mx-auto w-full max-w-6xl px-5 sm:px-8 lg:max-w-[85rem]",
+        // 90rem, the same measure as the header, hero, journey and contact,
+        // so every section shares the header's left and right edges.
+        "mx-auto w-full max-w-6xl px-5 sm:px-8 lg:max-w-[90rem]",
         className,
       )}
     >

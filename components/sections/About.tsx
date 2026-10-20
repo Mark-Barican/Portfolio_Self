@@ -70,36 +70,46 @@ export function About() {
           {/*  The interlock comes from the text column being offset down        */}
           {/*  instead, which is a stacking order that cannot collide.           */}
           {/* ---------------------------------------------------------------- */}
-          <ParallaxY distance={36} className="lg:col-span-5">
+          {/* Capped between phone and desktop: a full-width 3:4 portrait on
+              a tablet is a photo taller than the screen it is on. */}
+          <ParallaxY
+            distance={36}
+            className="sm:max-w-md lg:col-span-5 lg:max-w-none"
+          >
             <AboutFigure>
               <figure className="relative">
-                <div
-                  data-about-photo
-                  className="relative aspect-[3/4] w-full overflow-hidden"
-                >
-                  <Image
-                    src="/About-Photo.jpg"
-                    alt={`Portrait of ${SITE.shortName}`}
-                    fill
-                    loading="lazy"
-                    sizes="(max-width: 1024px) 92vw, 38vw"
-                    className="object-cover object-center"
+                {/* The marks share a box with the photo alone. On the figure
+                    itself, the lower one framed the photo and the caption
+                    together and landed beside the caption, off the image. */}
+                <div className="relative">
+                  <div
+                    data-about-photo
+                    className="relative aspect-[3/4] w-full overflow-hidden"
+                  >
+                    <Image
+                      src="/About-Photo.jpg"
+                      alt={`Portrait of ${SITE.shortName}`}
+                      fill
+                      loading="lazy"
+                      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 448px, 38vw"
+                      className="object-cover object-center"
+                    />
+                  </div>
+
+                  {/* Two drawn marks, offset off the image's corners. Absolute
+                      and inert, so they can cross the edge without affecting
+                      layout or intercepting anything. */}
+                  <span
+                    aria-hidden
+                    data-about-mark
+                    className="layer-decoration absolute -top-3 -left-3 h-16 w-16 origin-top-left border-t-2 border-l-2 border-ink"
+                  />
+                  <span
+                    aria-hidden
+                    data-about-mark
+                    className="layer-decoration absolute -right-3 -bottom-3 h-16 w-16 origin-bottom-right border-r-2 border-b-2 border-accent"
                   />
                 </div>
-
-                {/* Two drawn marks, offset off the image's corners. Absolute
-                    and inert, so they can cross the edge without affecting
-                    layout or intercepting anything. */}
-                <span
-                  aria-hidden
-                  data-about-mark
-                  className="layer-decoration absolute -top-3 -left-3 h-16 w-16 origin-top-left border-t-2 border-l-2 border-ink"
-                />
-                <span
-                  aria-hidden
-                  data-about-mark
-                  className="layer-decoration absolute -right-3 -bottom-3 h-16 w-16 origin-bottom-right border-r-2 border-b-2 border-accent"
-                />
 
                 <figcaption
                   data-about-caption

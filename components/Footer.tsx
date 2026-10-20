@@ -104,7 +104,9 @@ export function Footer() {
 
       <div
         data-foot-part
-        className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-cream/12 pt-5 sm:flex-row sm:items-center"
+        /* Side by side only from `xl`: below that the legal line and the
+           marks cannot share a row, and both wrapped into ragged halves. */
+        className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-cream/12 pt-5 xl:flex-row xl:items-center"
       >
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <p className="eyebrow text-cream/50">
@@ -131,7 +133,12 @@ export function Footer() {
 
         {/* Marks only, each with a tooltip naming it and the job it does. */}
         <ul className="flex flex-wrap items-center gap-x-1 gap-y-2">
-          <li aria-hidden className="eyebrow mr-3 text-cream/35">
+          {/* On its own line on phones, so the eight marks share one row
+              instead of leaving two stranded beneath the rest. */}
+          <li
+            aria-hidden
+            className="eyebrow mr-3 basis-full text-cream/35 sm:basis-auto"
+          >
             Built with
           </li>
           {BUILT_WITH.map((tech) => (

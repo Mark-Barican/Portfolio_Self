@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { EASE, SCRUB, scrubbed } from "@/lib/scroll";
 import { useGsap } from "@/hooks/useGsap";
+import { KeepHyphens } from "@/components/ui/KeepHyphens";
 import { TECHNOLOGY_GROUPS } from "@/lib/technologies";
 import { TECH_MARKS } from "@/lib/techMarks";
 
@@ -103,7 +104,7 @@ export function StackClusters() {
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h3 className="font-display text-2xl text-cream sm:text-[1.6rem]">
-                {group.title}
+                <KeepHyphens text={group.title} />
               </h3>
             </div>
             <p className="mt-2 text-base text-cream/55">{group.note}</p>

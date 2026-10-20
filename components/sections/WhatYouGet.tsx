@@ -145,7 +145,7 @@ export function WhatYouGet() {
                 </div>
                 <p
                   data-cap-part
-                  className="mt-3 max-w-xl text-base leading-relaxed text-cream/70 sm:text-lg"
+                  className="mt-3 max-w-xl text-base leading-relaxed text-pretty text-cream/70 sm:text-lg"
                 >
                   {capability.description}
                 </p>

@@ -1,8 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createFrameScheduler } from "@/lib/utils";
 import { isDarkSurfaceAt } from "@/lib/surface";
+import { SCRUB } from "@/lib/scroll";
+
+/**
+ * How long the probe keeps sampling after the last scroll event, in ms.
+ *
+ * The surfaces under the chrome are scrubbed, so they go on moving after the
+ * scroll itself has stopped: a `SurfaceEdge` wipe or a section's scene is
+ * still catching up for as long as its scrub lags. Sampling only on scroll
+ * events left the wordmark on whatever it read at the last one, and stopping
+ * just short of a boundary that was the surface the wipe was about to remove:
+ * a cream wordmark left on cream. The window covers the slowest scrub with
+ * room to spare.
+ */
+const SETTLE_MS = SCRUB.base * 1000 + 400;
 
 /**
  * Tracks whether fixed chrome at `probeY` px down the viewport is currently
@@ -25,8 +38,9 @@ import { isDarkSurfaceAt } from "@/lib/surface";
  * boundaries, and there is no second system for a timeline to fight with.
  *
  * Costs one `elementsFromPoint` and a few style reads per animation frame,
- * coalesced by `createFrameScheduler` and only while scrolling: the same
- * budget the custom cursor already runs on.
+ * only while scrolling and for `SETTLE_MS` after: the same budget the custom
+ * cursor already runs on. React drops the update when the answer has not
+ * changed, so the frames in between cost no renders.
  */
 export function useOverDarkSurface(probeY: number): boolean {
   const [overDark, setOverDark] = useState(false);
@@ -44,15 +58,25 @@ export function useOverDarkSurface(probeY: number): boolean {
         isDarkSurfaceAt(window.innerWidth / 2, probeY, { surfacesOnly: true }),
       );
 
-    const { schedule, cancel } = createFrameScheduler(check);
+    let frame = 0;
+    let until = 0;
+    const loop = () => {
+      check();
+      frame = performance.now() < until ? requestAnimationFrame(loop) : 0;
+    };
+    // Every scroll extends the window; one loop runs however many arrive.
+    const wake = () => {
+      until = performance.now() + SETTLE_MS;
+      if (!frame) frame = requestAnimationFrame(loop);
+    };
 
     check();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
+    window.addEventListener("scroll", wake, { passive: true });
+    window.addEventListener("resize", wake);
     return () => {
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      cancel();
+      window.removeEventListener("scroll", wake);
+      window.removeEventListener("resize", wake);
+      if (frame) cancelAnimationFrame(frame);
     };
   }, [probeY]);
 

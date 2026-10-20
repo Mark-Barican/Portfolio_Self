@@ -122,7 +122,7 @@ export function ProjectRow({
             {project.title}
           </span>
 
-          <span className="mt-1.5 block max-w-xl text-base leading-relaxed text-muted transition-colors duration-300 group-hover:text-ink/80 group-focus-visible:text-ink/80 sm:text-lg">
+          <span className="mt-1.5 block max-w-xl text-base leading-relaxed text-pretty text-muted transition-colors duration-300 group-hover:text-ink/80 group-focus-visible:text-ink/80 sm:text-lg">
             {project.description}
           </span>
 
@@ -137,17 +137,18 @@ export function ProjectRow({
             </span>
           </span>
 
-          {/* Touch devices never get the cursor-following preview, so the
-              cover is shown inline here instead. Hidden from `sm` up, where
-              the pointer preview takes over. */}
+          {/* Shown inline wherever the cursor-following preview is not: that
+              only runs at `lg` with a fine pointer (`useIsDesktop`), so this
+              hides on exactly the same condition. It used to hide from `sm`
+              up, which left tablets and touch laptops with no cover at all. */}
           {project.cover && (
-            <span className="relative mt-4 block aspect-[16/9] w-full overflow-hidden rounded-xl border-2 border-ink sm:hidden">
+            <span className="relative mt-4 block aspect-[16/9] w-full overflow-hidden rounded-xl border-2 border-ink lg:[@media(pointer:fine)]:hidden">
               <Image
                 src={project.cover}
                 alt=""
                 fill
                 loading="lazy"
-                sizes="(max-width: 640px) 92vw, 0px"
+                sizes="(max-width: 640px) 92vw, (max-width: 1024px) 80vw, 60vw"
                 quality={95}
                 className="object-cover object-top"
               />

@@ -284,7 +284,7 @@ export const PROJECTS: Project[] = [
       "Cinematic single-page narrative with animated section transitions",
       "Responsive, content-driven layout",
       "Lighthouse 94-100 Performance",
-      "100 SEO Â· 100 Best Practices Â· 96 Accessibility",
+      "100 SEO · 100 Best Practices · 96 Accessibility",
     ],
     challenges: [
       "Heavy cinematic motion usually comes at the cost of performance and accessibility.",

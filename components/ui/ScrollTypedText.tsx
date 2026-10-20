@@ -45,8 +45,8 @@ interface ScrollTypedTextProps {
  * is carried alongside it for assistive technology, so a screen reader is
  * handed one clean sentence rather than a few hundred individually announced
  * characters. Under reduced motion the scene never runs, and because the
- * characters rest visible in CSS with GSAP animating *from* hidden, the
- * paragraph is simply there, fully typed.
+ * characters rest visible in CSS and only the scene hides them, the paragraph
+ * is simply there, fully typed.
  *
  * **Cost.** One ScrollTrigger and one tween for the whole paragraph. The
  * per-character elements are static after mount: nothing re-renders, and the
@@ -70,8 +70,14 @@ export function ScrollTypedText({
       const chars = gsap.utils.toArray<HTMLElement>("[data-char]", ref.current);
       if (!chars.length) return;
 
-      gsap.from(chars, {
-        opacity: 0,
+      // Hidden up front and typed *to* visible, not animated `from` hidden. A
+      // staggered `from` on a scrubbed trigger only applied its start state to
+      // the first character, so until the scroll range began the sentence sat
+      // fully printed bar its opening letter ("'m a full-stack developer"),
+      // and the typing never visibly ran.
+      gsap.set(chars, { opacity: 0 });
+      gsap.to(chars, {
+        opacity: 1,
         // Each character snaps at its own midpoint: see the note above.
         ease: "steps(1)",
         stagger: { each: 1 / chars.length, ease: "none" },
